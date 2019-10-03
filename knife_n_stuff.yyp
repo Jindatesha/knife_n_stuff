@@ -47,6 +47,14 @@
             }
         },
         {
+            "Key": "04a2aadf-3d16-4231-b478-c53b6b0b33f0",
+            "Value": {
+                "id": "abff023d-12cf-4411-8aa0-dd24a8ba005d",
+                "resourcePath": "sprites\\spr_white_block\\spr_white_block.yy",
+                "resourceType": "GMSprite"
+            }
+        },
+        {
             "Key": "103da6fd-33f9-473e-821f-608909ba0ad8",
             "Value": {
                 "id": "41ec0017-3d71-49dd-8f11-875226ff2462",
@@ -60,6 +68,14 @@
                 "id": "1ec37ed1-e8c3-4b69-985c-5c9bbbbb48cb",
                 "resourcePath": "scripts\\scr_add_target_to_grid\\scr_add_target_to_grid.yy",
                 "resourceType": "GMScript"
+            }
+        },
+        {
+            "Key": "1d71b0f9-4619-4b07-9dd0-394475492d98",
+            "Value": {
+                "id": "53411205-b9c9-44d4-a85b-773de4a7c064",
+                "resourcePath": "fonts\\font_monofonto_large\\font_monofonto_large.yy",
+                "resourceType": "GMFont"
             }
         },
         {
@@ -135,6 +151,14 @@
             }
         },
         {
+            "Key": "60701f89-3e06-4f5f-86e7-8d072c4d4364",
+            "Value": {
+                "id": "049c963a-ed1f-4605-b87b-f186d13a11cb",
+                "resourcePath": "sprites\\spr_ui_ribbon\\spr_ui_ribbon.yy",
+                "resourceType": "GMSprite"
+            }
+        },
+        {
             "Key": "63a17558-de5e-4902-a701-daad84e41664",
             "Value": {
                 "id": "c44f8c79-ad9c-452a-a23e-d5490c8aec6d",
@@ -191,6 +215,22 @@
             }
         },
         {
+            "Key": "8ff2791f-7ed6-4eac-8550-41c1495d464f",
+            "Value": {
+                "id": "4fb53937-8b8b-4c0f-8d56-cfa6fd16bdc5",
+                "resourcePath": "sprites\\spr_button_restart\\spr_button_restart.yy",
+                "resourceType": "GMSprite"
+            }
+        },
+        {
+            "Key": "90b6fe44-1288-4182-994b-b9b5ff759313",
+            "Value": {
+                "id": "cc2c171e-35e7-414a-9f7e-92ef2a6f993b",
+                "resourcePath": "objects\\obj_end_run_menu\\obj_end_run_menu.yy",
+                "resourceType": "GMObject"
+            }
+        },
+        {
             "Key": "93566aad-c3b3-48a9-8fa7-9c5ee19f74ac",
             "Value": {
                 "id": "d1b79e76-9ebe-4333-bc9b-c86801fce8ea",
@@ -223,6 +263,14 @@
             }
         },
         {
+            "Key": "9b861e13-68c2-45fd-9a03-0dc37b8566c3",
+            "Value": {
+                "id": "6d27c246-5d98-4234-9f49-1153d13e1819",
+                "resourcePath": "sprites\\spr_knife_collision_mask\\spr_knife_collision_mask.yy",
+                "resourceType": "GMSprite"
+            }
+        },
+        {
             "Key": "a128950b-5063-4876-b4a6-b99dbd2ea6d1",
             "Value": {
                 "id": "0a4fed48-4bca-4b22-a9c8-814eb0ee1f9f",
@@ -231,11 +279,27 @@
             }
         },
         {
+            "Key": "a393f5d9-8479-40e9-9ad7-56f1b823fb27",
+            "Value": {
+                "id": "91311f76-4e6c-4fce-b62a-dd3a496fa508",
+                "resourcePath": "scripts\\scr_add_knife_to_grid\\scr_add_knife_to_grid.yy",
+                "resourceType": "GMScript"
+            }
+        },
+        {
             "Key": "a9188620-a624-4a5a-83ae-a1b53faf038b",
             "Value": {
                 "id": "fa33c779-33c1-443b-990f-9c508618ad4d",
                 "resourcePath": "options\\linux\\options_linux.yy",
                 "resourceType": "GMLinuxOptions"
+            }
+        },
+        {
+            "Key": "ab1fbb5b-7f64-41d0-9303-79aed7c3ffc3",
+            "Value": {
+                "id": "e113ecc8-8e8f-4701-a8b3-c5dc70821aa1",
+                "resourcePath": "objects\\obj_button_restart\\obj_button_restart.yy",
+                "resourceType": "GMObject"
             }
         },
         {
@@ -268,6 +332,14 @@
                 "id": "2abe1066-81d4-4d99-b0b9-49813c66321d",
                 "resourcePath": "sounds\\sound_knife_hit_target_common_default\\sound_knife_hit_target_common_default.yy",
                 "resourceType": "GMSound"
+            }
+        },
+        {
+            "Key": "c5fc1245-741b-40af-9bb1-fee4a5dbb06f",
+            "Value": {
+                "id": "524e3fdb-527a-47ec-bbe1-5e99ee0b1672",
+                "resourcePath": "shaders\\shader_flash\\shader_flash.yy",
+                "resourceType": "GMShader"
             }
         },
         {
@@ -376,7 +448,8 @@
         }
     ],
     "script_order": [
-        "14865c49-ff85-4dd7-a5c7-1b11925164ec"
+        "14865c49-ff85-4dd7-a5c7-1b11925164ec",
+        "a393f5d9-8479-40e9-9ad7-56f1b823fb27"
     ],
     "tutorial": ""
 }

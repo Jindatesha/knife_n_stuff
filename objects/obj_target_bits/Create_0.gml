@@ -18,3 +18,4 @@ var bottom_of_target_x = x;
 var bottom_of_target_y = y + (sprite_get_height(spr_target)/2) - 10;
 global.target_bits_part_emitter = part_emitter_create(global.target_bits_particle_system);
 part_emitter_region(global.target_bits_particle_system,global.target_bits_part_type,bottom_of_target_x - 15,bottom_of_target_x + 15,bottom_of_target_y,bottom_of_target_y,ps_shape_line,ps_distr_linear);
+

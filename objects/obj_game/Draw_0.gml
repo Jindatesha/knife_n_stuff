@@ -5,8 +5,10 @@
 
 
 //draw the knife
-draw_sprite(spr_knife_default,0,knife_starting_loc_x,knife_starting_loc_y);
-
+if draw_knife == true and global.current_run_active == true
+{
+	draw_sprite(spr_knife_default,0,knife_starting_loc_x,knife_starting_loc_y);
+}
 
 var still_have_this_knife = 0;
 //draw the ui for how many knives you need to throw
@@ -90,4 +92,48 @@ draw_text(stage_ui_number_starting_x,stage_ui_number_starting_y,"STAGE " + strin
 	draw_sprite(spr_ui_currency,0,currency_ui_starting_x,currency_ui_starting_y);
 	
 	
+#endregion
+
+
+
+#region white flash if needed
+	if (flash_alpha > 0)
+	{
+		gpu_set_blendmode(bm_add);
+		
+		draw_sprite_stretched_ext(spr_white_block,0,0,0,view_w,view_h,c_white,flash_alpha);
+		
+		gpu_set_blendmode(bm_normal);
+	}
+	else
+	{
+		if global.current_run_active == false
+		{
+			var knife_sprite_index = ds_grid_get(global.knife_grid,0,global.current_knife_number);
+			sprite_set_offset(knife_sprite_index,sprite_get_width(knife_sprite_index)/2,0);
+			
+			
+			with(obj_dummy_knife)
+			{
+				instance_destroy();
+			}
+			
+			
+			with(obj_target)
+			{
+				ds_grid_destroy(location_of_knives_grid);
+				instance_destroy();
+			}
+			
+
+		
+		
+			//if menu doesnt exist, create one
+			if !instance_exists(obj_end_run_menu)
+			{
+				instance_create_depth(x,y,depth - 1,obj_end_run_menu);
+			}
+		
+		}
+	}
 #endregion

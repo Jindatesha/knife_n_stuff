@@ -4,9 +4,18 @@
     "mvc": "1.0",
     "name": "obj_dummy_knife",
     "eventList": [
-        
+        {
+            "id": "f1dacd91-79d7-4560-bb2c-3a2b27a3fc15",
+            "modelName": "GMEvent",
+            "mvc": "1.0",
+            "IsDnD": false,
+            "collisionObjectId": "00000000-0000-0000-0000-000000000000",
+            "enumb": 0,
+            "eventtype": 8,
+            "m_owner": "e6d2af88-4fa6-4ec8-9236-5ac534ae24ba"
+        }
     ],
-    "maskSpriteId": "00000000-0000-0000-0000-000000000000",
+    "maskSpriteId": "9b861e13-68c2-45fd-9a03-0dc37b8566c3",
     "overriddenProperties": null,
     "parentObjectId": "00000000-0000-0000-0000-000000000000",
     "persistent": false,

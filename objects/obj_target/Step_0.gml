@@ -14,7 +14,7 @@ if collided_knife != noone
 {
 	
 	//set this knife's length and direction location so it may rotate with the target
-	var this_knifes_length = point_distance(x,y,collided_knife.x,collided_knife.y) - 37;
+	var this_knifes_length = point_distance(x,y,collided_knife.x,collided_knife.y) - 30;
 	var this_knifes_direction = point_direction(x,y,collided_knife.x,collided_knife.y);
 	ds_grid_set(location_of_knives_grid,0,knives_on_target,this_knifes_length);
 	ds_grid_set(location_of_knives_grid,1,knives_on_target,this_knifes_direction);
@@ -35,10 +35,49 @@ if collided_knife != noone
 		event_user(0);
 	}
 	
-
 	
+	flash_alpha = 0.5;	
+	knockback_amount = max_knockback_amount;
 }
 
+
+
+if (knockback_amount > 0)
+{
+	knockback_amount -= 1;
+	y -= knockback_amount;
+	come_back_speed = 0;
+}
+else
+{
+	come_back_speed += 1;
+	y += come_back_speed;
+	y = clamp(y,0,max_y);
+}
+
+
+
+
+
+
+
+
+if (flash_alpha > 0)
+{
+	flash_alpha -= (0.5/8);
+}
+	
+
+
+
+
+
+if global.current_run_active == false
+{
+	var knife_sprite_index = ds_grid_get(global.knife_grid,0,global.current_knife_number);
+	sprite_set_offset(knife_sprite_index,sprite_get_width(knife_sprite_index)/2,0);
+	//sprite_set_offset(sprite_index,sprite_get_width(sprite_index)/2,sprite_get_height(sprite_index)/2);
+}
 
 //update rotation and position of all my knives 
 for(var i = 0; i < knives_on_target; i += 1;)

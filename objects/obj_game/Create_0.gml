@@ -1,6 +1,11 @@
 /// @description Insert description here
 // You can write your code in this editor
 
+//game run speed
+game_set_speed(60, gamespeed_fps);
+
+
+
 //macros
 #macro view view_camera[0]
 #macro view_w camera_get_view_width(view)
@@ -81,8 +86,35 @@ scr_add_target_to_grid(spr_target_boss_common_1,spr_target_boss_common_1,spr_tar
 
 
 
+//boss targets
+enum KNIFE_COMMON
+{
+	DEFAULT,
+	//DEFAULT_TOO,
+	LAST_IN_LIST
+}
+
+enum KNIFE_EPIC // epic
+{
+	DEFAULT = KNIFE_COMMON.LAST_IN_LIST,
+	DEFAULT_TOO,
+	LAST_IN_LIST
+}
+
+enum KNIFE_RARE_CHAMPION //champion
+{
+	DEFAULT = KNIFE_EPIC.LAST_IN_LIST,
+	DEFAULT_TOO,
+	LAST_IN_LIST
+}
+
+//knife grid
+global.knife_grid = ds_grid_create(1,0);
 
 
+//add all the knives to the grid
+//common
+scr_add_knife_to_grid(spr_knife_default);
 
 
 
@@ -130,8 +162,25 @@ global.correctly_thrown_knives = 0;
 //which target are we talking about?
 global.which_target_number = TARGET_REGULAR.DEFAULT;
 
+//which knife are we talking about?
+global.current_knife_number = KNIFE_COMMON.DEFAULT;
+
 
 //create the target/object
 instance_create_depth(view_w /2,view_h * 0.35,depth + 1,obj_target);
 
 instance_create_depth(view_w /2,view_h * 0.35,depth + 2,obj_target_bits);
+
+//so we can draw it
+draw_knife = true;
+
+
+
+//for flash white effect
+global.knife_collided = false;
+flash_alpha = 0;
+flash_color = c_white;
+
+//is this run/session still active (havent failed yet)
+global.current_run_active = true;
+
