@@ -111,6 +111,14 @@
             }
         },
         {
+            "Key": "323277f6-fc18-431b-a97f-3c0f890d661e",
+            "Value": {
+                "id": "b9ec9c9f-bd66-465a-b4cb-4e43159a11d1",
+                "resourcePath": "sprites\\spr_ui_currency_object\\spr_ui_currency_object.yy",
+                "resourceType": "GMSprite"
+            }
+        },
+        {
             "Key": "3da54664-7df0-4693-9d10-eac848952d5b",
             "Value": {
                 "id": "ac99faf2-b861-4651-b012-d11260e8f8ab",
@@ -340,6 +348,14 @@
                 "id": "524e3fdb-527a-47ec-bbe1-5e99ee0b1672",
                 "resourcePath": "shaders\\shader_flash\\shader_flash.yy",
                 "resourceType": "GMShader"
+            }
+        },
+        {
+            "Key": "c6e65c63-832c-4e1b-952a-fbde27e1a7fa",
+            "Value": {
+                "id": "8bf4459b-2c25-4a25-938b-5ad61ae6af3e",
+                "resourcePath": "objects\\obj_coin\\obj_coin.yy",
+                "resourceType": "GMObject"
             }
         },
         {

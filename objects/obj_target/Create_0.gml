@@ -4,6 +4,7 @@
 max_y = y;
 come_back_speed = 0;
 location_of_knives_grid = ds_grid_create(2,10);
+location_of_coins_grid = ds_grid_create(2,3);
 rotation_speed = 3;
 
 knives_on_target = 0;
@@ -17,3 +18,12 @@ knockback_amount = 0;
 //for white flash
 flash_alpha = 0;
 flash_color = c_white;
+
+
+
+
+
+
+
+
+

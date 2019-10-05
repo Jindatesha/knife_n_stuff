@@ -27,7 +27,25 @@ if global.current_run_active == true and ive_collided == false
 	
 		global.knife_collided = true;
 		global.current_run_active = false;
-		random_knive_richochet_x = irandom_range(-(move_speed/2),(move_speed/2));
+		random_knive_richochet_x = irandom_range(0,3);
+		switch(random_knive_richochet_x)
+		{
+			case 0:
+				random_knive_richochet_x = -(move_speed/3);
+			break;
+			
+			case 1:
+				random_knive_richochet_x = -(move_speed/2);
+			break;
+			
+			case 2:
+				random_knive_richochet_x = (move_speed/2);
+			break;
+			
+			case 3:
+				random_knive_richochet_x = (move_speed/3);
+			break;
+		}
 		ive_collided = true;
 
 		

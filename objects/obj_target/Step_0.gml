@@ -10,7 +10,7 @@ image_angle += rotation_speed;
 //if a knife hits us, delete it
 var collided_knife = instance_place(x,y,obj_knife);
 
-if collided_knife != noone
+if collided_knife != noone and global.current_run_active == true
 {
 	
 	//set this knife's length and direction location so it may rotate with the target
@@ -79,10 +79,11 @@ if global.current_run_active == false
 	//sprite_set_offset(sprite_index,sprite_get_width(sprite_index)/2,sprite_get_height(sprite_index)/2);
 }
 
+
+
 //update rotation and position of all my knives 
 for(var i = 0; i < knives_on_target; i += 1;)
 {
-	var d = i;
 	var this_knifes_length = ds_grid_get(location_of_knives_grid,0,i);
 	var this_knifes_direction = ds_grid_get(location_of_knives_grid,1,i);
 	
@@ -97,6 +98,26 @@ for(var i = 0; i < knives_on_target; i += 1;)
 }
 
 
+//update rotation/location for coins
+//update rotation and position of all my coins 
+var coins_on_target = instance_number(obj_coin);
+
+for(var i = 0; i < coins_on_target; i += 1;)
+{
+	var this_coins_length = ds_grid_get(location_of_coins_grid,0,i);
+	var this_coins_direction = ds_grid_get(location_of_coins_grid,1,i);
+	
+	ds_grid_set(location_of_coins_grid,1,i,this_coins_direction + rotation_speed);
+	
+	with(instance_find(obj_coin,i))
+	{
+		x = other.x + lengthdir_x(this_coins_length,this_coins_direction);	
+		y = other.y + lengthdir_y(this_coins_length,this_coins_direction);
+		image_angle = this_coins_direction + 90;
+	}	
+}
+
+
 
 //if we reached the set number of knives we needed to throw are correctly stuck inside the target
 if knives_on_target == 10
@@ -104,6 +125,45 @@ if knives_on_target == 10
 	//moves to next level in stage(up to boss)
 	global.current_level_in_stage += 1;
 	global.stage_number += 1;
+	
+	with(obj_coin)
+	{
+		instance_destroy();
+	}
+	
+	//destroy the knives in our target/object
+	with(obj_dummy_knife)
+	{
+		instance_destroy();
+	}
+	
+	//does this new target im about to make...have coin(s) on it?
+	var random_number = irandom_range(1,100);
+	var how_many_coins = 0;
+	
+	if random_number >= 50
+	{
+		random_number = irandom_range(1,100);
+		
+		if random_number <= 10
+		{
+			how_many_coins = 3;
+		}
+		else
+		{
+			if random_number <= 30
+			{
+				how_many_coins = 2;
+			}
+			else
+			{
+				how_many_coins = 1;
+			}
+		}
+	}
+	
+	
+	
 	
 	//was this the boss fight?
 	if global.current_level_in_stage >= 4
@@ -125,11 +185,36 @@ if knives_on_target == 10
 		sprite_index = target_sprite;
 	}
 	
-	//destroy the knives in our target/object
-	with(obj_dummy_knife)
+	
+	//put the coins on the target (as long as this isnt a boss fight)
+	if how_many_coins > 0 and global.current_level_in_stage < 4 
 	{
-		instance_destroy();
+		var this_coins_direction = irandom_range(0,360);
+		var this_coins_length = 0;
+			
+		for(var i = 0; i < how_many_coins; i += 1;)
+		{	
+			coins_on_target = instance_number(obj_coin);
+			this_coins_direction = irandom_range(0,360);
+			this_coins_length = 0;
+			//set this knife's length and direction location so it may rotate with the target	
+			do
+			{
+				this_coins_length += 1;
+			}
+			until ( position_empty(x + lengthdir_x(this_coins_length,this_coins_direction),y + lengthdir_y(this_coins_length,this_coins_direction)))
+			
+			this_coins_length += sprite_get_width(spr_ui_currency_object)/2;
+			
+			ds_grid_set(location_of_coins_grid,0,i,this_coins_length);
+			ds_grid_set(location_of_coins_grid,1,i,this_coins_direction);
+	
+			instance_create_depth(x + lengthdir_x(this_coins_length,this_coins_direction),y + lengthdir_y(this_coins_length,this_coins_direction),depth + 1,obj_coin);
+		}
 	}
+	
+	
+	
 	
 	//we no longer have knives in us
 	knives_on_target = 0;
