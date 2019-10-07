@@ -10,32 +10,46 @@ if draw_knife == true and global.current_run_active == true
 	draw_sprite(spr_knife_default,0,knife_starting_loc_x,knife_starting_loc_y);
 }
 
-var still_have_this_knife = 0;
-//draw the ui for how many knives you need to throw
-for(var i = 0; i < starting_knives_amount; i += 1;)
+
+//start to fade ui if current run is over
+if global.current_run_active == false
 {
-	
-	if global.knives_left > i
-	{
-		still_have_this_knife = 1;
-	}
-	else
-	{
-		still_have_this_knife = 0;
-	}
-	
-	
-	//draw the actual sprite
-	draw_sprite(spr_ui_knives_left,still_have_this_knife,knives_left_ui_loc_x,knives_left_ui_loc_y - (knives_left_ui_gap * i));
+	ui_alpha -= 0.04;
+	ui_alpha = clamp(ui_alpha,0,1);
 }
 
 
+var my_color = c_ui_yellow;
+
+
+#region knives left ui show how many we need/have thrown this stage
+
+	var still_have_this_knife = 0;
+	//draw the ui for how many knives you need to throw
+	for(var i = 0; i < starting_knives_amount; i += 1;)
+	{
+	
+		if global.knives_left > i
+		{
+			still_have_this_knife = 1;
+		}
+		else
+		{
+			still_have_this_knife = 0;
+		}
+	
+	
+		//draw the actual sprite
+		draw_sprite_ext(spr_ui_knives_left,still_have_this_knife,knives_left_ui_loc_x,knives_left_ui_loc_y - (knives_left_ui_gap * i),1,1,0,c_white,ui_alpha);
+	}
+
+#endregion
 
 
 #region total knives correctly thrown in target/object this run
 
 draw_set_halign(fa_left);
-draw_text(correct_knives_loc_x,correct_knives_loc_y,string(global.correctly_thrown_knives));
+draw_text_ext_color(correct_knives_loc_x,correct_knives_loc_y,string(global.correctly_thrown_knives),0,300,my_color,my_color,my_color,my_color,ui_alpha);
 	
 
 #endregion
@@ -73,14 +87,14 @@ for(var i = 0; i < levels_in_stage; i += 1;)
 	}
 	
 	//draw the actual ui bit
-	draw_sprite(spr_ui_stage,what_sprite,stage_ui_starting_x + (i * what_stage_ui_width) - ((levels_in_stage * what_stage_ui_width)/2),stage_ui_starting_y);
+	draw_sprite_ext(spr_ui_stage,what_sprite,stage_ui_starting_x + (i * what_stage_ui_width) - ((levels_in_stage * what_stage_ui_width)/2),stage_ui_starting_y,1,1,0,c_white,ui_alpha);
 }
 
 
 
 //what stage number are you on
 draw_set_halign(fa_middle);
-draw_text(stage_ui_number_starting_x,stage_ui_number_starting_y,"STAGE " + string(global.stage_number));
+draw_text_ext_color(stage_ui_number_starting_x,stage_ui_number_starting_y,"STAGE " + string(global.stage_number),0,300,my_color,my_color,my_color,my_color,ui_alpha);
 
 #endregion
 
@@ -88,8 +102,8 @@ draw_text(stage_ui_number_starting_x,stage_ui_number_starting_y,"STAGE " + strin
 #region currency ui
 	
 	draw_set_halign(fa_right);
-	draw_text(currency_ui_starting_x - sprite_get_width(spr_ui_currency) - 5,currency_ui_starting_y,string(global.currency));
-	draw_sprite(spr_ui_currency,0,currency_ui_starting_x,currency_ui_starting_y);
+	draw_text_ext_color(currency_ui_starting_x - sprite_get_width(spr_ui_currency) - 5,currency_ui_starting_y,string(global.currency),0,300,my_color,my_color,my_color,my_color,ui_alpha);
+	draw_sprite_ext(spr_ui_currency,0,currency_ui_starting_x,currency_ui_starting_y,1,1,0,c_white,ui_alpha);
 	
 	
 #endregion
@@ -113,6 +127,12 @@ draw_text(stage_ui_number_starting_x,stage_ui_number_starting_y,"STAGE " + strin
 			sprite_set_offset(knife_sprite_index,sprite_get_width(knife_sprite_index)/2,0);
 			
 			
+			with(obj_coin)
+			{
+				instance_destroy();
+			}
+			
+			
 			with(obj_dummy_knife)
 			{
 				instance_destroy();
@@ -129,8 +149,9 @@ draw_text(stage_ui_number_starting_x,stage_ui_number_starting_y,"STAGE " + strin
 		
 		
 			//if menu doesnt exist, create one
-			if !instance_exists(obj_end_run_menu)
+			if !instance_exists(obj_end_run_menu) and can_create_end_run_menu == true
 			{
+				can_create_end_run_menu = false;
 				instance_create_depth(x,y,depth - 1,obj_end_run_menu);
 			}
 		

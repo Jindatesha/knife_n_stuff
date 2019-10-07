@@ -1,10 +1,8 @@
 /// scr_add_knife_to_grid();
 /// @param knife_sprite
-
-
-
-var target_sprite = argument[0];
-
+/// @param name
+/// @param unlocked
+/// @param cost
 
 
 //get and resize the grid to fit our new target in

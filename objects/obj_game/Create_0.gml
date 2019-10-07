@@ -8,16 +8,20 @@ game_set_speed(60, gamespeed_fps);
 
 //macros
 #macro view view_camera[0]
+
+//camera settings
+ideal_width = 320;
+ideal_height = 480;
+camera_set_view_size(view,ideal_width,ideal_height);
+
+
 #macro view_w camera_get_view_width(view)
 #macro view_h camera_get_view_height(view)
 
 //colors
 #macro c_ui_yellow make_color_rgb(228,178,42)
 
-//camera settings
-ideal_width = 320;
-ideal_height = 480;
-camera_set_view_size(view,ideal_width,ideal_height);
+
 
 
 //font
@@ -109,13 +113,30 @@ enum KNIFE_RARE_CHAMPION //champion
 }
 
 //knife grid
-global.knife_grid = ds_grid_create(1,0);
+global.knife_grid = ds_grid_create(4,0);
 
 
 //add all the knives to the grid
 //common
-scr_add_knife_to_grid(spr_knife_default);
+scr_add_knife_to_grid(spr_knife_default,"Basic",true,0);
+//rambo
+scr_add_knife_to_grid(spr_knife_rambo,"Ramboh",false,3);
 
+
+
+
+
+
+
+
+
+//knife grid
+global.wall_grid = ds_grid_create(1,0);
+
+
+//add all the knives to the grid
+//common
+scr_add_wall_to_grid(spr_background_basic);
 
 
 
@@ -184,3 +205,12 @@ flash_color = c_white;
 //is this run/session still active (havent failed yet)
 global.current_run_active = true;
 
+
+//making sure we can create the ned run ui but not if we click shop boi
+can_create_end_run_menu = true;
+
+//fade ui if run is over
+ui_alpha = 1;
+
+//background image
+background_image = spr_background_basic;
