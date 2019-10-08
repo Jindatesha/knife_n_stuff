@@ -3,7 +3,7 @@
 /// @param name
 /// @param unlocked
 /// @param cost
-
+/// @param equipped
 
 //get and resize the grid to fit our new target in
 var width_of_grid = ds_grid_width(global.knife_grid);

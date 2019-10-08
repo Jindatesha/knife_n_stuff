@@ -1,6 +1,12 @@
 /// @description Insert description here
 // You can write your code in this editor
 
+//mouse x/y
+var my_mouse_x = device_mouse_x(0);
+var my_mouse_y = device_mouse_y(0);
+
+
+
 
 
 //top ribbon
@@ -42,10 +48,31 @@ draw_sprite(spr_ui_shop_top_ribbon,0,ribbon_starting_x,0);
 
 
 //exit shop button
-var exit_shop_button_starting_x = view_w - (ribbon_starting_x + side_padding_from_initial_ribbon + (sprite_get_width(spr_ui_shop_exit_button)/2) + 7);
+var exit_shop_button_width = sprite_get_width(spr_ui_shop_exit_button);
+var exit_shop_button_starting_x = view_w - (ribbon_starting_x + side_padding_from_initial_ribbon + (exit_shop_button_width/2) + 7);
 var exit_shop_button_starting_y = currency_add_button_starting_y;
 draw_sprite(spr_ui_shop_exit_button,0,exit_shop_button_starting_x,exit_shop_button_starting_y);
 
+//if i click it...leave this menu
+var mouse_in_circle = point_in_circle(my_mouse_x,my_mouse_y,exit_shop_button_starting_x,exit_shop_button_starting_y,exit_shop_button_width);
+if mouse_in_circle != true
+{
+	exit_shop_button_clicked = false;
+}
+
+
+if device_mouse_check_button_pressed(0,mb_left) and mouse_in_circle
+{
+	exit_shop_button_clicked = true;
+}
+
+
+
+if device_mouse_check_button_released(0,mb_left) and mouse_in_circle and (exit_shop_button_clicked == true)
+{
+	//exit the menu
+	restart_to_new_session();
+}
 
 
 #region tabs
@@ -118,13 +145,68 @@ draw_sprite(spr_ui_shop_top_line,0,top_line_location_x,top_line_location_y + sur
 	var this_item_slot_y = 0;
 	var this_item_sprite;
 	var this_item_scale;
+	var item_slot_starting_loc_x = top_line_location_x;
+	var item_slot_starting_loc_y = top_line_location_y + sprite_get_height(spr_ui_shop_top_line);
+	var mouse_in_rectangle;
+	var this_slot_selected = 0;
+	
 	for(var i = 0; i < num_of_items_in_this_tab; i += 1;)
 	{
 		//backing
 		this_item_slot_x = (item_slot_width /2) + ((item_slot_width + item_slot_spacer_w) * (i mod slots_per_row));
 		this_item_slot_y = ((item_slot_height/2) + item_slot_spacer_h) + ((item_slot_height + item_slot_spacer_h) * (i div slots_per_row)) + item_slot_scrolled_amount;
 		
-		draw_sprite(spr_ui_shop_item_slot,0,this_item_slot_x,this_item_slot_y);
+		
+		//if i click it...
+		mouse_in_rectangle = point_in_rectangle(my_mouse_x,my_mouse_y, item_slot_starting_loc_x + this_item_slot_x - (item_slot_width/2), item_slot_starting_loc_y + this_item_slot_y - (item_slot_height/2),item_slot_starting_loc_x + this_item_slot_x + (item_slot_width/2), item_slot_starting_loc_y + this_item_slot_y + (item_slot_height/2));
+		
+		if mouse_in_rectangle != true
+		{
+			item_slot_array[i] = false;
+		}
+
+
+		if device_mouse_check_button_pressed(0,mb_left) and mouse_in_rectangle
+		{
+			item_slot_array[i] = true;
+		}
+
+
+
+		if device_mouse_check_button_released(0,mb_left) and mouse_in_rectangle and (item_slot_array[i] == true)
+		{
+			//equip this thing
+			//which one was false?
+			var false_grid_pos;
+			for(var e = 0; e < num_of_items_in_this_tab; e += 1;)
+			{
+				if ds_grid_get(item_list_id,4,e) == true
+				{
+					false_grid_pos = e;
+					break;
+				}
+			}
+			
+			ds_grid_set(item_list_id,4,false_grid_pos,false);
+			
+			//set equipped to true
+			ds_grid_set(item_list_id,4,i,true);	
+			
+			global.current_knife_number = i;
+			global.knife_sprite = ds_grid_get(global.knife_grid,0,global.current_knife_number);
+		}
+		
+		if global.current_knife_number == i
+		{
+			this_slot_selected = 1;
+		}
+		else
+		{
+			this_slot_selected = 0;
+		}
+		
+		
+		draw_sprite(spr_ui_shop_item_slot,this_slot_selected,this_item_slot_x,this_item_slot_y);
 
 		//item sprite
 		this_item_sprite = ds_grid_get(global.knife_grid,0,i);
@@ -138,11 +220,8 @@ draw_sprite(spr_ui_shop_top_line,0,top_line_location_x,top_line_location_y + sur
 	surface_reset_target();
 	
 	//now that we have the location of the surface ...check to see if we are scrolling* in it
-	var item_slot_starting_loc_x = top_line_location_x;
-	var item_slot_starting_loc_y = top_line_location_y + sprite_get_height(spr_ui_shop_top_line);
 	
-	var my_mouse_x = device_mouse_x(0);
-	var my_mouse_y = device_mouse_y(0);
+
 	
 	if device_mouse_check_button(0,mb_left)
 	{

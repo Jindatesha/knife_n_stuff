@@ -113,14 +113,14 @@ enum KNIFE_RARE_CHAMPION //champion
 }
 
 //knife grid
-global.knife_grid = ds_grid_create(4,0);
+global.knife_grid = ds_grid_create(5,0);
 
 
 //add all the knives to the grid
 //common
-scr_add_knife_to_grid(spr_knife_default,"Basic",true,0);
+scr_add_knife_to_grid(spr_knife_default,"Basic",true,0,true);
 //rambo
-scr_add_knife_to_grid(spr_knife_rambo,"Ramboh",false,3);
+scr_add_knife_to_grid(spr_knife_rambo,"Ramboh",false,3,false);
 
 
 
@@ -184,7 +184,22 @@ global.correctly_thrown_knives = 0;
 global.which_target_number = TARGET_REGULAR.DEFAULT;
 
 //which knife are we talking about?
-global.current_knife_number = KNIFE_COMMON.DEFAULT;
+//equip this thing
+//which one was false?
+var which_grid_id = global.knife_grid;
+var false_grid_pos,what_value;
+for(var i = 0; i < ds_grid_height(which_grid_id); i += 1;)
+{
+	what_value = ds_grid_get(which_grid_id,4,i);
+	if what_value == true
+	{
+		false_grid_pos = i;
+		break;
+	}
+}
+		
+global.current_knife_number = false_grid_pos;
+global.knife_sprite = ds_grid_get(global.knife_grid,0,global.current_knife_number);
 
 
 //create the target/object

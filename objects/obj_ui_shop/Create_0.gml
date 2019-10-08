@@ -23,3 +23,21 @@ grid_of_items_in_this_tab_array[2] = global.wall_grid;
 //for scrolling in item slot
 item_slot_scrolled_amount = 0;
 old_mouse_y = 0;
+
+
+
+//exit button
+exit_shop_button_clicked = false;
+
+//slots array to determine if we properly clicked these or not
+item_slot_array[0] = false;
+
+
+
+
+
+
+
+
+
+

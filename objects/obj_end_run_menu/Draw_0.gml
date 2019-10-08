@@ -18,7 +18,7 @@ draw_set_font(font_monofonto);
 
 //stage 
 draw_set_color(c_ui_yellow);
-draw_text(ribbon_starting_x + (sprite_get_width(spr_ui_ribbon)/2),ribbon_starting_y + 87,"STAGE" + string(global.stage_number));
+draw_text(ribbon_starting_x + (sprite_get_width(spr_ui_ribbon)/2),ribbon_starting_y + 87,"STAGE " + string(global.stage_number));
 
 draw_set_valign(fa_top);
 

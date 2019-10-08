@@ -7,7 +7,7 @@
 //draw the knife
 if draw_knife == true and global.current_run_active == true
 {
-	draw_sprite(spr_knife_default,0,knife_starting_loc_x,knife_starting_loc_y);
+	draw_sprite(global.knife_sprite,0,knife_starting_loc_x,knife_starting_loc_y);
 }
 
 
