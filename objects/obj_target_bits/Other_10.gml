@@ -1,7 +1,7 @@
 /// @description slap down some target bitssss
 
 
-what_particle_sprite = ds_grid_get(global.target_grid,2,global.which_target_number);
+what_particle_sprite = ds_grid_get(global.target_grid,6,global.current_taget_number);
 part_type_sprite(global.target_bits_part_type,what_particle_sprite,false,false,true);
 
 var how_many_particles = 3;

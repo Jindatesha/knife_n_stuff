@@ -89,7 +89,7 @@ if device_mouse_check_button_released(0,mb_left) and mouse_in_circle and (exit_s
 	draw_set_valign(fa_middle);
 	draw_set_halign(fa_center);
 	draw_set_font(font_monofonto_small);
-
+	var mouse_in_tab,this_tabs_location_x;
 
 	for(var i = 0; i < num_of_tabs; i += 1;)
 	{
@@ -104,11 +104,35 @@ if device_mouse_check_button_released(0,mb_left) and mouse_in_circle and (exit_s
 			amount_to_middle_tab = (tab_height/2) + 2;
 		}
 		
+		this_tabs_location_x = tab_starting_location_x + ((tab_width + tab_spacer_x) * i);
+		
+		
+		mouse_in_tab = point_in_rectangle(my_mouse_x,my_mouse_y, this_tabs_location_x, tab_starting_location_y,this_tabs_location_x + tab_width, tab_starting_location_y + tab_height);
+		
+		if mouse_in_tab != true
+		{
+			tab_hovered_array[i] = false;
+		}
+
+
+		if device_mouse_check_button_pressed(0,mb_left) and mouse_in_tab
+		{
+			tab_hovered_array[i] = true;
+		}
+
+
+
+		if device_mouse_check_button_released(0,mb_left) and mouse_in_tab and (tab_hovered_array[i] == true)
+		{
+			selected_top_tab = i;
+		}
+		
+		
 		//backing of tab
-		draw_sprite(spr_ui_shop_top_tabs,top_sub_image,tab_starting_location_x + ((tab_width + tab_spacer_x) * i),tab_starting_location_y);
+		draw_sprite(spr_ui_shop_top_tabs,top_sub_image,this_tabs_location_x,tab_starting_location_y);
 	
 		//text in tab				
-		draw_text_color(tab_starting_location_x + ((tab_width + tab_spacer_x) * i) + (tab_width/2),tab_starting_location_y + amount_to_middle_tab,string(text_in_tab_array[i]),my_text_color,my_text_color,my_text_color,my_text_color,1)
+		draw_text_color(this_tabs_location_x + (tab_width/2),tab_starting_location_y + amount_to_middle_tab,string(text_in_tab_array[i]),my_text_color,my_text_color,my_text_color,my_text_color,1)
 	
 	}
 	
@@ -124,7 +148,8 @@ var top_line_location_y = tab_starting_location_y + tab_height - 4;
 draw_sprite(spr_ui_shop_top_line,0,top_line_location_x,top_line_location_y);
 
 //bot
-draw_sprite(spr_ui_shop_top_line,0,top_line_location_x,top_line_location_y + surface_get_height(shop_surface));
+var bot_line_location_y = top_line_location_y + surface_get_height(shop_surface);
+draw_sprite(spr_ui_shop_top_line,0,top_line_location_x,bot_line_location_y);
 
 
 
@@ -134,8 +159,8 @@ draw_sprite(spr_ui_shop_top_line,0,top_line_location_x,top_line_location_y + sur
 	surface_set_target(shop_surface);
 	draw_clear_alpha(c_black, 0);
 	//draw the stuff
-	var item_list_id = grid_of_items_in_this_tab_array[selected_top_tab];
-	var num_of_items_in_this_tab = ds_grid_height(item_list_id);
+	var item_grid_id = grid_id_in_this_tab_array[selected_top_tab];
+	var num_of_items_in_this_tab = ds_grid_height(item_grid_id);
 	var item_slot_width = sprite_get_width(spr_ui_shop_item_slot);
 	var item_slot_height = sprite_get_height(spr_ui_shop_item_slot);
 	var item_slot_spacer_w = 9;
@@ -145,8 +170,9 @@ draw_sprite(spr_ui_shop_top_line,0,top_line_location_x,top_line_location_y + sur
 	var this_item_slot_y = 0;
 	var this_item_sprite;
 	var this_item_scale;
+	var ui_line_height = sprite_get_height(spr_ui_shop_top_line);
 	var item_slot_starting_loc_x = top_line_location_x;
-	var item_slot_starting_loc_y = top_line_location_y + sprite_get_height(spr_ui_shop_top_line);
+	var item_slot_starting_loc_y = top_line_location_y + ui_line_height;
 	var mouse_in_rectangle;
 	var this_slot_selected = 0;
 	
@@ -157,66 +183,85 @@ draw_sprite(spr_ui_shop_top_line,0,top_line_location_x,top_line_location_y + sur
 		this_item_slot_y = ((item_slot_height/2) + item_slot_spacer_h) + ((item_slot_height + item_slot_spacer_h) * (i div slots_per_row)) + item_slot_scrolled_amount;
 		
 		
-		//if i click it...
-		mouse_in_rectangle = point_in_rectangle(my_mouse_x,my_mouse_y, item_slot_starting_loc_x + this_item_slot_x - (item_slot_width/2), item_slot_starting_loc_y + this_item_slot_y - (item_slot_height/2),item_slot_starting_loc_x + this_item_slot_x + (item_slot_width/2), item_slot_starting_loc_y + this_item_slot_y + (item_slot_height/2));
+		#region if clicked...
+			mouse_in_rectangle = point_in_rectangle(my_mouse_x,my_mouse_y, item_slot_starting_loc_x + this_item_slot_x - (item_slot_width/2), item_slot_starting_loc_y + this_item_slot_y - (item_slot_height/2),item_slot_starting_loc_x + this_item_slot_x + (item_slot_width/2), item_slot_starting_loc_y + this_item_slot_y + (item_slot_height/2));
 		
-		if mouse_in_rectangle != true
-		{
-			item_slot_array[i] = false;
-		}
-
-
-		if device_mouse_check_button_pressed(0,mb_left) and mouse_in_rectangle
-		{
-			item_slot_array[i] = true;
-		}
-
-
-
-		if device_mouse_check_button_released(0,mb_left) and mouse_in_rectangle and (item_slot_array[i] == true)
-		{
-			//equip this thing
-			//which one was false?
-			var false_grid_pos;
-			for(var e = 0; e < num_of_items_in_this_tab; e += 1;)
+			if mouse_in_rectangle != true
 			{
-				if ds_grid_get(item_list_id,4,e) == true
-				{
-					false_grid_pos = e;
-					break;
-				}
+				item_slot_array[i] = false;
 			}
-			
-			ds_grid_set(item_list_id,4,false_grid_pos,false);
-			
-			//set equipped to true
-			ds_grid_set(item_list_id,4,i,true);	
-			
-			global.current_knife_number = i;
-			global.knife_sprite = ds_grid_get(global.knife_grid,0,global.current_knife_number);
-		}
-		
-		if global.current_knife_number == i
-		{
-			this_slot_selected = 1;
-		}
-		else
-		{
-			this_slot_selected = 0;
-		}
-		
-		
-		draw_sprite(spr_ui_shop_item_slot,this_slot_selected,this_item_slot_x,this_item_slot_y);
 
+
+			if device_mouse_check_button_pressed(0,mb_left) and mouse_in_rectangle
+			{
+				item_slot_array[i] = true;
+			}
+
+
+
+			if device_mouse_check_button_released(0,mb_left) and mouse_in_rectangle and (item_slot_array[i] == true)
+			{
+				//equip this thing
+				//which one was false?
+				var false_grid_pos;
+				for(var e = 0; e < num_of_items_in_this_tab; e += 1;)
+				{
+					if ds_grid_get(item_grid_id,4,e) == true
+					{
+						false_grid_pos = e;
+						break;
+					}
+				}
+			
+				ds_grid_set(item_grid_id,4,false_grid_pos,false);
+			
+				//set equipped to true
+				ds_grid_set(item_grid_id,4,i,true);	
+			
+				current_item_number_in_this_tab_array[selected_top_tab] = i;
+				//current_sprite_in_this_tab_array[selected_top_tab] = ds_grid_get(item_grid_id,0,current_item_number_in_this_tab_array[selected_top_tab]);
+			
+				#region because we have just made a change in one of the global holders...change our globals to match
+					global.knife_grid = grid_id_in_this_tab_array[0];
+					global.target_grid = grid_id_in_this_tab_array[1];
+					global.wall_grid = grid_id_in_this_tab_array[2];
+
+					global.current_knife_number = current_item_number_in_this_tab_array[0];
+					global.current_taget_number = current_item_number_in_this_tab_array[1];
+					global.current_wall_number = current_item_number_in_this_tab_array[2];
+
+					global.knife_sprite = ds_grid_get(global.knife_grid,0,global.current_knife_number);
+					global.target_sprite = ds_grid_get(global.target_grid,0,global.current_taget_number);
+					global.wall_sprite = ds_grid_get(global.wall_grid,0,global.current_wall_number);
+				#endregion
+			
+			}
+		#endregion
+		
+		
+		#region item slot backing
+			if current_item_number_in_this_tab_array[selected_top_tab] == i
+			{
+				this_slot_selected = 1;
+			}
+			else
+			{
+				this_slot_selected = 0;
+			}
+		
+		
+			draw_sprite(spr_ui_shop_item_slot,this_slot_selected,this_item_slot_x,this_item_slot_y);
+		#endregion
+		
+		 
 		//item sprite
-		this_item_sprite = ds_grid_get(global.knife_grid,0,i);
-		this_item_scale = 0.75;
-		draw_sprite_ext(this_item_sprite,0,this_item_slot_x + (sprite_get_xoffset(this_item_sprite) * this_item_scale) - ((sprite_get_width(this_item_sprite) * this_item_scale)/2),this_item_slot_y + (sprite_get_yoffset(this_item_sprite) * this_item_scale) - ((sprite_get_height(this_item_sprite) * this_item_scale)/2),this_item_scale,this_item_scale,0,c_white,1);
+		this_item_sprite = current_sprite_in_this_tab_array[selected_top_tab];
+		
+		draw_sprite(this_item_sprite,i,this_item_slot_x + sprite_get_xoffset(this_item_sprite) - (sprite_get_width(this_item_sprite)/2),this_item_slot_y + sprite_get_yoffset(this_item_sprite)  - (sprite_get_height(this_item_sprite)/2));
 	}
 	
 	
-	//reset the surface
-	
+	//reset the surface	
 	surface_reset_target();
 	
 	//now that we have the location of the surface ...check to see if we are scrolling* in it
@@ -236,7 +281,7 @@ draw_sprite(spr_ui_shop_top_line,0,top_line_location_x,top_line_location_y + sur
 	draw_surface(shop_surface,item_slot_starting_loc_x,item_slot_starting_loc_y);
 	
 #endregion
-
-
-
+var item_number = current_item_number_in_this_tab_array[selected_top_tab];
+//draw_set_font(font_monofonto);
+draw_text(top_line_location_x + (sprite_get_width(spr_ui_shop_top_line)/2),bot_line_location_y + ui_line_height + 16,ds_grid_get(item_grid_id,1,current_item_number_in_this_tab_array[selected_top_tab]));
 

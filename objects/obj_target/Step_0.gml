@@ -16,6 +16,13 @@ if collided_knife != noone and global.current_run_active == true
 	//set this knife's length and direction location so it may rotate with the target
 	var this_knifes_actual_length = 0;
 	var this_knifes_direction = point_direction(x,y,collided_knife.x,collided_knife.y);
+	
+	//destroy collided knife now so that we can have a proper place meeting
+	with(collided_knife)
+	{
+		instance_destroy();
+	}
+	
 	//set this knife's length and direction location so it may rotate with the target	
 	do
 	{
@@ -23,7 +30,7 @@ if collided_knife != noone and global.current_run_active == true
 	}
 	until ( position_empty(x + lengthdir_x(this_knifes_actual_length,this_knifes_direction),y + lengthdir_y(this_knifes_actual_length,this_knifes_direction)))
 	
-	var this_knifes_fake_length = this_knifes_actual_length - 30 - sprite_get_height(global.knife_sprite) - sprite_get_height(spr_knife_default);
+	var this_knifes_fake_length = this_knifes_actual_length - 30 - (sprite_get_height(global.knife_sprite) - sprite_get_height(spr_knife_default));
 	
 	ds_grid_set(location_of_knives_grid,0,knives_on_target,this_knifes_fake_length);
 	ds_grid_set(location_of_knives_grid,1,knives_on_target,this_knifes_actual_length);
@@ -34,15 +41,9 @@ if collided_knife != noone and global.current_run_active == true
 		sprite_index = global.knife_sprite;
 		fake_x = x - lengthdir_x(this_knifes_actual_length - this_knifes_fake_length,this_knifes_direction);
 		fake_y = y - lengthdir_y(this_knifes_actual_length - this_knifes_fake_length,this_knifes_direction);
-
-		actual_x = x;
-		actual_y = y;
 	}
 	
-	with(collided_knife)
-	{
-		instance_destroy();
-	}
+	
 	
 	knives_on_target += 1;
 	global.correctly_thrown_knives += 1;
@@ -114,8 +115,8 @@ for(var i = 0; i < knives_on_target; i += 1;)
 		fake_x = other.x + lengthdir_x(this_knifes_fake_length,this_knifes_direction);	
 		fake_y = other.y + lengthdir_y(this_knifes_fake_length,this_knifes_direction);
 		
-		actual_x = other.x + lengthdir_x(this_knifes_actual_length,this_knifes_direction);	
-		actual_y = other.y + lengthdir_y(this_knifes_actual_length,this_knifes_direction);
+		x = other.x + lengthdir_x(this_knifes_actual_length,this_knifes_direction);	
+		y = other.y + lengthdir_y(this_knifes_actual_length,this_knifes_direction);
 		image_angle = this_knifes_direction + 90;
 	}	
 }
@@ -192,7 +193,7 @@ if knives_on_target == 10
 	if global.current_level_in_stage >= 4
 	{
 		//swap our target image
-		global.which_target_number = irandom_range(TARGET_BOSS_COMMON.DEFAULT,TARGET_BOSS_COMMON.LAST_IN_LIST - 1);
+		global.current_taget_number = irandom_range(TARGET_BOSS_COMMON.DEFAULT,TARGET_BOSS_COMMON.LAST_IN_LIST - 1);
 
 		
 		if global.current_level_in_stage > 4
@@ -200,10 +201,10 @@ if knives_on_target == 10
 			//reset the level for stage
 			global.current_level_in_stage = 0;
 			
-			global.which_target_number = irandom_range(0,TARGET_REGULAR.LAST_IN_LIST - 1);
+			global.current_taget_number = irandom_range(0,TARGET_REGULAR.LAST_IN_LIST - 1);
 		}
 		
-		target_sprite = ds_grid_get(global.target_grid,0,global.which_target_number);
+		target_sprite = ds_grid_get(global.target_grid,0,global.current_taget_number);
 		//target_sprite = spr_target_common_1;
 		sprite_index = target_sprite;
 	}

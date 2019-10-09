@@ -1,9 +1,9 @@
 /// scr_add_wall_to_grid();
 /// @param wall_sprite
-
-
-
-var target_sprite = argument[0];
+/// @param name
+/// @param unlocked
+/// @param cost
+/// @param equipped
 
 
 

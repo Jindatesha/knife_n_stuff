@@ -9,7 +9,7 @@ rotation_speed = 3;
 
 knives_on_target = 0;
 
-target_sprite = ds_grid_get(global.target_grid,0,global.which_target_number);
+target_sprite = ds_grid_get(global.target_grid,0,global.current_taget_number);
 
 max_knockback_amount = 5;
 knockback_amount = 0;

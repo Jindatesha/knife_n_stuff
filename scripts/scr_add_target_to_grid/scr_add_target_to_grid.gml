@@ -1,14 +1,13 @@
 /// scr_add_target_to_grid();
 /// @param target_sprite
+/// @param name
+/// @param unlocked
+/// @param cost
+/// @param equipped
 /// @param target_animation_sprite_sheet
 /// @param target_break_off_bits
 /// @param target_on_hit_sound_effect
 
-
-var target_sprite = argument[0];
-var target_animation_sprite_sheet = argument[1];
-var target_break_off_bits = argument[2];
-var target_on_hit_sound_effect = argument[3];
 
 
 //get and resize the grid to fit our new target in

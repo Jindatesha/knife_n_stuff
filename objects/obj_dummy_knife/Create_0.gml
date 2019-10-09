@@ -3,8 +3,7 @@
 fake_x = 0;
 fake_y = 0;
 
-actual_x = 0;
-actual_y = 0;
+
 
 
 

@@ -1,7 +1,7 @@
 //start a new run/session
 	global.stage_number = 1;
 	global.correctly_thrown_knives = 0;
-	global.which_target_number = TARGET_REGULAR.DEFAULT;
+	global.current_taget_number = TARGET_REGULAR.DEFAULT;
 	global.knives_left = 10;
 	global.current_level_in_stage = 0;
 	global.knife_collided = false;

@@ -71,18 +71,18 @@ enum TARGET_BOSS_EPIC
 //grid of all the targets
 //start with common and move up to epic
 //width: image,break apart animation sprite,break off bits image,on hit sound effect,
-global.target_grid = ds_grid_create(4,0);
+global.target_grid = ds_grid_create(8,0);
 
 
 
 //add all the targets and their values
 //common
-scr_add_target_to_grid(spr_target,spr_target,spr_target_normal_default_bits,sound_knife_hit_target_common_default);
-scr_add_target_to_grid(spr_target_common_1,spr_target_common_1,spr_target_normal_1_bits,sound_knife_hit_target_common_default);
+scr_add_target_to_grid(spr_target,"simple",true,0,true,spr_target,spr_target_normal_default_bits,sound_knife_hit_target_common_default);
+scr_add_target_to_grid(spr_target_common_1,"diff",true,0,false,spr_target_common_1,spr_target_normal_1_bits,sound_knife_hit_target_common_default);
 
 //bosses
 //common
-scr_add_target_to_grid(spr_target_boss_common_1,spr_target_boss_common_1,spr_target_boss_common_1_bits,sound_knife_hit_target_common_default);
+scr_add_target_to_grid(spr_target_boss_common_1,"dohnut",true,0,false,spr_target_boss_common_1,spr_target_boss_common_1_bits,sound_knife_hit_target_common_default);
 
 
 
@@ -131,12 +131,12 @@ scr_add_knife_to_grid(spr_knife_rambo,"Ramboh",false,3,false);
 
 
 //knife grid
-global.wall_grid = ds_grid_create(1,0);
+global.wall_grid = ds_grid_create(5,0);
 
 
 //add all the knives to the grid
 //common
-scr_add_wall_to_grid(spr_background_basic);
+scr_add_wall_to_grid(spr_background_basic,"Basic",true,0,true);
 
 
 
@@ -181,7 +181,25 @@ global.correctly_thrown_knives = 0;
 
 
 //which target are we talking about?
-global.which_target_number = TARGET_REGULAR.DEFAULT;
+var which_grid_id = global.target_grid;
+var false_grid_pos,what_value;
+for(var i = 0; i < ds_grid_height(which_grid_id); i += 1;)
+{
+	what_value = ds_grid_get(which_grid_id,4,i);
+	if what_value == true
+	{
+		false_grid_pos = i;
+		break;
+	}
+}
+		
+global.current_taget_number = false_grid_pos;
+global.target_sprite = ds_grid_get(which_grid_id,0,global.current_taget_number);
+
+
+
+
+
 
 //which knife are we talking about?
 //equip this thing
@@ -199,7 +217,26 @@ for(var i = 0; i < ds_grid_height(which_grid_id); i += 1;)
 }
 		
 global.current_knife_number = false_grid_pos;
-global.knife_sprite = ds_grid_get(global.knife_grid,0,global.current_knife_number);
+global.knife_sprite = ds_grid_get(which_grid_id,0,global.current_knife_number);
+
+
+
+//wall
+var which_grid_id = global.wall_grid;
+var false_grid_pos,what_value;
+for(var i = 0; i < ds_grid_height(which_grid_id); i += 1;)
+{
+	what_value = ds_grid_get(which_grid_id,4,i);
+	if what_value == true
+	{
+		false_grid_pos = i;
+		break;
+	}
+}
+		
+global.current_wall_number = false_grid_pos;
+global.wall_sprite = ds_grid_get(which_grid_id,0,global.current_wall_number);
+
 
 
 //create the target/object

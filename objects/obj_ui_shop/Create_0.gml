@@ -15,10 +15,18 @@ text_in_tab_array[2] = "WALLS";
 
 
 //an array, with each slot holding the id of lists that contain all our items for each tab
-grid_of_items_in_this_tab_array[0] = global.knife_grid;
-grid_of_items_in_this_tab_array[1] = global.target_grid;
-grid_of_items_in_this_tab_array[2] = global.wall_grid;
+grid_id_in_this_tab_array[0] = global.knife_grid;
+grid_id_in_this_tab_array[1] = global.target_grid;
+grid_id_in_this_tab_array[2] = global.wall_grid;
 
+
+current_item_number_in_this_tab_array[0] = global.current_knife_number;
+current_item_number_in_this_tab_array[1] = global.current_taget_number;
+current_item_number_in_this_tab_array[2] = global.current_wall_number;
+
+current_sprite_in_this_tab_array[0] = spr_ui_all_knives;
+current_sprite_in_this_tab_array[1] = spr_ui_all_targets;
+current_sprite_in_this_tab_array[2] = spr_ui_all_walls;
 
 //for scrolling in item slot
 item_slot_scrolled_amount = 0;
@@ -33,7 +41,8 @@ exit_shop_button_clicked = false;
 item_slot_array[0] = false;
 
 
-
+//tab array to determine if we properly clicked these or not
+tab_hovered_array[0] = false;
 
 
 
