@@ -65,24 +65,36 @@ enum TARGET_BOSS_EPIC
 
 
 
-
-
+enum TARGET
+{
+	SPRITE,
+	NAME,
+	UNLOCKED,
+	COST,
+	EQUIPPED,
+	ANIMATION_SPRITE,
+	BREAK_OFF_BITS,
+	ON_HIT_SOUND,
+	MOVEMENT_PATTERN,
+	AMOUNT_OF_KNIVES_TO_THROW
+	
+}
 
 //grid of all the targets
 //start with common and move up to epic
 //width: image,break apart animation sprite,break off bits image,on hit sound effect,
-global.target_grid = ds_grid_create(8,0);
+global.target_grid = ds_grid_create(10,0);
 
 
 
 //add all the targets and their values
 //common
-scr_add_target_to_grid(spr_target,"simple",true,0,true,spr_target,spr_target_normal_default_bits,sound_knife_hit_target_common_default);
-scr_add_target_to_grid(spr_target_common_1,"diff",true,0,false,spr_target_common_1,spr_target_normal_1_bits,sound_knife_hit_target_common_default);
+scr_add_target_to_grid(spr_target,"simple",true,0,true,spr_target,spr_target_normal_default_bits,sound_knife_hit_target_common_default,0,10);
+scr_add_target_to_grid(spr_target_common_1,"diff",true,0,false,spr_target_common_1,spr_target_normal_1_bits,sound_knife_hit_target_common_default,0,10);
 
 //bosses
 //common
-scr_add_target_to_grid(spr_target_boss_common_1,"dohnut",true,0,false,spr_target_boss_common_1,spr_target_boss_common_1_bits,sound_knife_hit_target_common_default);
+scr_add_target_to_grid(spr_target_boss_common_1,"DONUT",true,0,false,spr_target_boss_common_1,spr_target_boss_common_1_bits,sound_knife_hit_target_common_default,1,5);
 
 
 
@@ -120,7 +132,7 @@ global.knife_grid = ds_grid_create(5,0);
 //common
 scr_add_knife_to_grid(spr_knife_default,"Basic",true,0,true);
 //rambo
-scr_add_knife_to_grid(spr_knife_rambo,"Ramboh",false,3,false);
+scr_add_knife_to_grid(spr_knife_rambo,"Ramboh",false,15,false);
 
 
 
@@ -144,8 +156,8 @@ scr_add_wall_to_grid(spr_background_basic,"Basic",true,0,true);
 
 
 //knife stuff
-starting_knives_amount = 10;
-global.knives_left = starting_knives_amount;
+global.starting_knives_amount = 10;
+global.knives_left = global.starting_knives_amount;
 knife_starting_loc_x = view_w / 2;
 knife_starting_loc_y = (view_h * 0.8) - sprite_get_height(spr_knife_default) + sprite_get_height(spr_ui_knives_left);
 
@@ -266,3 +278,14 @@ ui_alpha = 1;
 
 //background image
 background_image = spr_background_basic;
+
+//for boss intro/animations
+global.is_doing_boss_intro = false;
+started_timer_to_boss_battle = false;
+initial_time_till_boss_starts = room_speed * 1;
+ui_warning_alpha_angle = 0;
+ui_warning_alpha = 1;
+
+
+
+

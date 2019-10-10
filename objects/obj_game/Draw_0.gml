@@ -7,12 +7,12 @@
 //draw the knife
 if draw_knife == true and global.current_run_active == true
 {
-	draw_sprite(global.knife_sprite,0,knife_starting_loc_x,knife_starting_loc_y);
+	draw_sprite_ext(global.knife_sprite,0,knife_starting_loc_x,knife_starting_loc_y,1,1,0,c_white,ui_alpha);
 }
 
 
 //start to fade ui if current run is over
-if global.current_run_active == false
+if global.current_run_active == false or global.is_doing_boss_intro == true
 {
 	ui_alpha -= 0.04;
 	ui_alpha = clamp(ui_alpha,0,1);
@@ -26,7 +26,7 @@ var my_color = c_ui_yellow;
 
 	var still_have_this_knife = 0;
 	//draw the ui for how many knives you need to throw
-	for(var i = 0; i < starting_knives_amount; i += 1;)
+	for(var i = 0; i < global.starting_knives_amount; i += 1;)
 	{
 	
 		if global.knives_left > i
@@ -47,11 +47,9 @@ var my_color = c_ui_yellow;
 
 
 #region total knives correctly thrown in target/object this run
-
 draw_set_halign(fa_left);
 draw_text_ext_color(correct_knives_loc_x,correct_knives_loc_y,string(global.correctly_thrown_knives),0,300,my_color,my_color,my_color,my_color,ui_alpha);
 	
-
 #endregion
 
 
@@ -94,8 +92,35 @@ for(var i = 0; i < levels_in_stage; i += 1;)
 
 //what stage number are you on
 draw_set_halign(fa_middle);
-draw_text_ext_color(stage_ui_number_starting_x,stage_ui_number_starting_y,"STAGE " + string(global.stage_number),0,300,my_color,my_color,my_color,my_color,ui_alpha);
-
+if global.current_level_in_stage != 4
+{
+	draw_text_ext_color(stage_ui_number_starting_x,stage_ui_number_starting_y,"STAGE " + string(global.stage_number),0,300,my_color,my_color,my_color,my_color,ui_alpha);
+}
+else
+{
+	//its a boss battle
+	if global.is_doing_boss_intro == true
+	{		
+		if started_timer_to_boss_battle == false
+		{
+			started_timer_to_boss_battle = true;
+			alarm[1] = initial_time_till_boss_starts;
+		}
+		
+		ui_warning_alpha_angle -= 7;
+		ui_warning_alpha += sin(degtorad(ui_warning_alpha_angle))/10;
+		ui_warning_alpha = clamp(ui_warning_alpha,0.2,0.8);
+		draw_sprite_ext(spr_ui_warning,0,view_w/2,view_h * 0.4,1,1,0,c_white,ui_warning_alpha);
+		
+	}
+	else
+	{
+	
+		
+		var bosses_name = ds_grid_get(global.target_grid,1,global.current_taget_number);
+		draw_text_ext_color(stage_ui_number_starting_x,stage_ui_number_starting_y,"BOSS: " + bosses_name,0,300,my_color,my_color,my_color,my_color,ui_alpha);
+	}
+}
 #endregion
 
 

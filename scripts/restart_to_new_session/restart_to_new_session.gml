@@ -1,11 +1,15 @@
 //start a new run/session
 	global.stage_number = 1;
 	global.correctly_thrown_knives = 0;
-	global.current_taget_number = TARGET_REGULAR.DEFAULT;
-	global.knives_left = 10;
+	global.current_taget_number = TARGET_REGULAR.DEFAULT;	
 	global.current_level_in_stage = 0;
 	global.knife_collided = false;
 	global.current_run_active = true;
+	
+	var total_knives_needed = ds_grid_get(global.target_grid,TARGET.AMOUNT_OF_KNIVES_TO_THROW,global.current_taget_number);
+	global.starting_knives_amount = total_knives_needed;
+	global.knives_left = total_knives_needed;
+	
 	//create the target/object
 	instance_create_depth(view_w /2,view_h * 0.35,depth + 1,obj_target);
 	

@@ -174,14 +174,18 @@ draw_sprite(spr_ui_shop_top_line,0,top_line_location_x,bot_line_location_y);
 	var item_slot_starting_loc_x = top_line_location_x;
 	var item_slot_starting_loc_y = top_line_location_y + ui_line_height;
 	var mouse_in_rectangle;
+	var unlocked;
+	var item_cost_color = c_white;
 	var this_slot_selected = 0;
+	var this_items_cost;
 	
 	for(var i = 0; i < num_of_items_in_this_tab; i += 1;)
 	{
 		//backing
 		this_item_slot_x = (item_slot_width /2) + ((item_slot_width + item_slot_spacer_w) * (i mod slots_per_row));
 		this_item_slot_y = ((item_slot_height/2) + item_slot_spacer_h) + ((item_slot_height + item_slot_spacer_h) * (i div slots_per_row)) + item_slot_scrolled_amount;
-		
+		unlocked = ds_grid_get(item_grid_id,2,i);
+		this_items_cost = ds_grid_get(item_grid_id,3,i);
 		
 		#region if clicked...
 			mouse_in_rectangle = point_in_rectangle(my_mouse_x,my_mouse_y, item_slot_starting_loc_x + this_item_slot_x - (item_slot_width/2), item_slot_starting_loc_y + this_item_slot_y - (item_slot_height/2),item_slot_starting_loc_x + this_item_slot_x + (item_slot_width/2), item_slot_starting_loc_y + this_item_slot_y + (item_slot_height/2));
@@ -201,43 +205,75 @@ draw_sprite(spr_ui_shop_top_line,0,top_line_location_x,bot_line_location_y);
 
 			if device_mouse_check_button_released(0,mb_left) and mouse_in_rectangle and (item_slot_array[i] == true)
 			{
-				//equip this thing
-				//which one was false?
-				var false_grid_pos;
-				for(var e = 0; e < num_of_items_in_this_tab; e += 1;)
+				//first off check to see if its unlocked
+				if unlocked == false
 				{
-					if ds_grid_get(item_grid_id,4,e) == true
+					//see if u can buy it
+					if global.currency >= this_items_cost
 					{
-						false_grid_pos = e;
-						break;
+						//unlock it
+						ds_grid_set(item_grid_id,2,i,true);
+						unlocked = true;
+						
+						//pay for it
+						global.currency -= this_items_cost;
 					}
 				}
+				
+				
+				if unlocked == true
+				{
+					//equip this thing
+					//which one was false?
+					var false_grid_pos;
+					for(var e = 0; e < num_of_items_in_this_tab; e += 1;)
+					{
+						if ds_grid_get(item_grid_id,4,e) == true
+						{
+							false_grid_pos = e;
+							break;
+						}
+					}
 			
-				ds_grid_set(item_grid_id,4,false_grid_pos,false);
+					ds_grid_set(item_grid_id,4,false_grid_pos,false);
 			
-				//set equipped to true
-				ds_grid_set(item_grid_id,4,i,true);	
+					//set equipped to true
+					ds_grid_set(item_grid_id,4,i,true);	
 			
-				current_item_number_in_this_tab_array[selected_top_tab] = i;
-				//current_sprite_in_this_tab_array[selected_top_tab] = ds_grid_get(item_grid_id,0,current_item_number_in_this_tab_array[selected_top_tab]);
+					current_item_number_in_this_tab_array[selected_top_tab] = i;
+					//current_sprite_in_this_tab_array[selected_top_tab] = ds_grid_get(item_grid_id,0,current_item_number_in_this_tab_array[selected_top_tab]);
 			
-				#region because we have just made a change in one of the global holders...change our globals to match
-					global.knife_grid = grid_id_in_this_tab_array[0];
-					global.target_grid = grid_id_in_this_tab_array[1];
-					global.wall_grid = grid_id_in_this_tab_array[2];
+					#region because we have just made a change in one of the global holders...change our globals to match
+						global.knife_grid = grid_id_in_this_tab_array[0];
+						global.target_grid = grid_id_in_this_tab_array[1];
+						global.wall_grid = grid_id_in_this_tab_array[2];
 
-					global.current_knife_number = current_item_number_in_this_tab_array[0];
-					global.current_taget_number = current_item_number_in_this_tab_array[1];
-					global.current_wall_number = current_item_number_in_this_tab_array[2];
+						global.current_knife_number = current_item_number_in_this_tab_array[0];
+						global.current_taget_number = current_item_number_in_this_tab_array[1];
+						global.current_wall_number = current_item_number_in_this_tab_array[2];
 
-					global.knife_sprite = ds_grid_get(global.knife_grid,0,global.current_knife_number);
-					global.target_sprite = ds_grid_get(global.target_grid,0,global.current_taget_number);
-					global.wall_sprite = ds_grid_get(global.wall_grid,0,global.current_wall_number);
-				#endregion
-			
+						global.knife_sprite = ds_grid_get(global.knife_grid,0,global.current_knife_number);
+						global.target_sprite = ds_grid_get(global.target_grid,0,global.current_taget_number);
+						global.wall_sprite = ds_grid_get(global.wall_grid,0,global.current_wall_number);
+					#endregion
+				}
 			}
 		#endregion
 		
+		
+		//item sprite
+		this_item_sprite = current_sprite_in_this_tab_array[selected_top_tab];
+		
+		draw_sprite(this_item_sprite,i,this_item_slot_x,this_item_slot_y);
+	
+	
+		//draw the dark locked bit if you dont have this item unlocked
+		
+		if unlocked == false
+		{
+			draw_sprite(spr_ui_shop_dark_locked_bit,0,this_item_slot_x,this_item_slot_y);
+		}
+	
 		
 		#region item slot backing
 			if current_item_number_in_this_tab_array[selected_top_tab] == i
@@ -253,11 +289,15 @@ draw_sprite(spr_ui_shop_top_line,0,top_line_location_x,bot_line_location_y);
 			draw_sprite(spr_ui_shop_item_slot,this_slot_selected,this_item_slot_x,this_item_slot_y);
 		#endregion
 		
-		 
-		//item sprite
-		this_item_sprite = current_sprite_in_this_tab_array[selected_top_tab];
 		
-		draw_sprite(this_item_sprite,i,this_item_slot_x + sprite_get_xoffset(this_item_sprite) - (sprite_get_width(this_item_sprite)/2),this_item_slot_y + sprite_get_yoffset(this_item_sprite)  - (sprite_get_height(this_item_sprite)/2));
+		//draw ribbon and cost IF its locked
+		if unlocked == false
+		{
+			draw_sprite(spr_ui_shop_ribbon_cost,0,this_item_slot_x - (item_slot_width /2) ,this_item_slot_y - (item_slot_height /2) );
+			//draw_set_font(font_monofonto);
+			draw_text_transformed_color(this_item_slot_x - (item_slot_width /2) + 26,this_item_slot_y - (item_slot_height /2) + 17,this_items_cost,1,1,39,item_cost_color,item_cost_color,item_cost_color,item_cost_color,1);
+		}
+		 
 	}
 	
 	

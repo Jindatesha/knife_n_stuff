@@ -3,7 +3,13 @@
 
 
 
-draw_self();
+//draw_self();
+if global.is_doing_boss_intro == true
+{
+	target_scale += 0.024;
+	target_scale = clamp(target_scale,0,1);
+}
+draw_sprite_ext(sprite_index,0,x,y,target_scale,target_scale,image_angle,c_white,1);
 
 
 #region white flash if needed

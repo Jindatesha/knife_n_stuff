@@ -7,7 +7,8 @@
 /// @param target_animation_sprite_sheet
 /// @param target_break_off_bits
 /// @param target_on_hit_sound_effect
-
+/// @param movement_pattern
+/// @param amount_of_knives_to_throw
 
 
 //get and resize the grid to fit our new target in

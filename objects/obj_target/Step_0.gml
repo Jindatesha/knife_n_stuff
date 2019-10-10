@@ -2,7 +2,7 @@
 // You can write your code in this editor
 
 
-
+scr_target_movement_pattern(movement_pattern);
 
 image_angle += rotation_speed;
 
@@ -12,9 +12,10 @@ var collided_knife = instance_place(x,y,obj_knife);
 
 if collided_knife != noone and global.current_run_active == true
 {
+	hit_counter += 1;
 	
 	//set this knife's length and direction location so it may rotate with the target
-	var this_knifes_actual_length = 0;
+	var this_knifes_actual_length = point_distance(x,y,collided_knife.x,collided_knife.y);
 	var this_knifes_direction = point_direction(x,y,collided_knife.x,collided_knife.y);
 	
 	//destroy collided knife now so that we can have a proper place meeting
@@ -71,7 +72,7 @@ else
 {
 	come_back_speed += 1;
 	y += come_back_speed;
-	y = clamp(y,0,max_y);
+	y = clamp(y,min_y,max_y);
 }
 
 
@@ -144,11 +145,12 @@ for(var i = 0; i < coins_on_target; i += 1;)
 
 
 //if we reached the set number of knives we needed to throw are correctly stuck inside the target
-if knives_on_target == 10
+if knives_on_target == total_knives_needed
 {
 	//moves to next level in stage(up to boss)
 	global.current_level_in_stage += 1;
 	global.stage_number += 1;
+	hit_counter = 0;
 	
 	with(obj_coin)
 	{
@@ -194,8 +196,19 @@ if knives_on_target == 10
 	{
 		//swap our target image
 		global.current_taget_number = irandom_range(TARGET_BOSS_COMMON.DEFAULT,TARGET_BOSS_COMMON.LAST_IN_LIST - 1);
-
 		
+		
+		
+		//only do this if its a boss battle specifically
+		if global.current_level_in_stage == 4
+		{
+			global.is_doing_boss_intro = true;
+			target_scale = 0.1;
+		}
+		
+		
+		
+		//this is resetting from boss battle back to regular targets
 		if global.current_level_in_stage > 4
 		{
 			//reset the level for stage
@@ -204,10 +217,21 @@ if knives_on_target == 10
 			global.current_taget_number = irandom_range(0,TARGET_REGULAR.LAST_IN_LIST - 1);
 		}
 		
-		target_sprite = ds_grid_get(global.target_grid,0,global.current_taget_number);
+	
+		movement_pattern = ds_grid_get(global.target_grid,TARGET.MOVEMENT_PATTERN,global.current_taget_number);
+		target_sprite = ds_grid_get(global.target_grid,TARGET.SPRITE,global.current_taget_number);
 		//target_sprite = spr_target_common_1;
 		sprite_index = target_sprite;
 	}
+	
+	
+	
+	total_knives_needed = ds_grid_get(global.target_grid,TARGET.AMOUNT_OF_KNIVES_TO_THROW,global.current_taget_number);
+	global.starting_knives_amount = total_knives_needed;
+	global.knives_left = total_knives_needed;
+	
+	
+	
 	
 	
 	//put the coins on the target (as long as this isnt a boss fight)
@@ -233,7 +257,10 @@ if knives_on_target == 10
 			ds_grid_set(location_of_coins_grid,0,i,this_coins_length);
 			ds_grid_set(location_of_coins_grid,1,i,this_coins_direction);
 	
-			instance_create_depth(x + lengthdir_x(this_coins_length,this_coins_direction),y + lengthdir_y(this_coins_length,this_coins_direction),depth + 1,obj_coin);
+			with(instance_create_depth(x + lengthdir_x(this_coins_length,this_coins_direction),y + lengthdir_y(this_coins_length,this_coins_direction),depth + 1,obj_coin))
+			{
+				mask_index = spr_ui_currency_collision;
+			}
 		}
 	}
 	
@@ -243,7 +270,5 @@ if knives_on_target == 10
 	//we no longer have knives in us
 	knives_on_target = 0;
 	
-	//reset number of knives that we can throw
-	global.knives_left = 10;
 }
 

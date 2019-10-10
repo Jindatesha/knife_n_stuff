@@ -5,7 +5,7 @@
 
 
 //if we tap to throw a knife
-if mouse_check_button_pressed(mb_left) and global.knives_left > 0 and global.current_run_active == true
+if mouse_check_button_pressed(mb_left) and global.knives_left > 0 and global.current_run_active == true and global.is_doing_boss_intro == false
 {
 	global.knives_left -= 1;
 	
