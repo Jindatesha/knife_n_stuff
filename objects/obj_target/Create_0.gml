@@ -14,7 +14,7 @@ rotation_speed = default_rotation_speed;
 knives_on_target = 0;
 total_knives_needed = 10;
 
-target_sprite = ds_grid_get(global.target_grid,0,global.current_taget_number);
+target_sprite = ds_grid_get(global.target_grid,0,global.current_target_number);
 
 
 //for white flash
@@ -27,7 +27,13 @@ target_scale = 1;
 //different patterns
 hit_counter = 0;
 movement_pattern = 0;
+my_move_pattern_dir = 1;
+is_swapping_move_pattern = false;
 
+
+max_consecutive_hit_timer = room_speed * 0.55;
+consecutive_hit_timer = 0;
+consecutive_hit_amount = 0;
 
 
 

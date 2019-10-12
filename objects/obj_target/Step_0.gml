@@ -6,6 +6,11 @@ scr_target_movement_pattern(movement_pattern);
 
 image_angle += rotation_speed;
 
+consecutive_hit_timer -= 1
+if consecutive_hit_timer <= 0
+{
+	consecutive_hit_amount = 0;
+}
 
 //if a knife hits us, delete it
 var collided_knife = instance_place(x,y,obj_knife);
@@ -13,6 +18,19 @@ var collided_knife = instance_place(x,y,obj_knife);
 if collided_knife != noone and global.current_run_active == true
 {
 	hit_counter += 1;
+	
+	
+	//play the sound
+	consecutive_hit_amount += 1;
+	consecutive_hit_timer = max_consecutive_hit_timer;
+	consecutive_hit_amount = clamp(consecutive_hit_amount,0,10);
+	
+	var target_hit_sound = sound_knife_hit_target_common_default;
+	audio_sound_gain(target_hit_sound,global.sound_effects_volume, 0);
+	audio_sound_pitch(target_hit_sound, 1 + (0.05 * consecutive_hit_amount));
+	audio_play_sound(target_hit_sound,10,false);
+	
+	
 	
 	//set this knife's length and direction location so it may rotate with the target
 	var this_knifes_actual_length = point_distance(x,y,collided_knife.x,collided_knife.y);
@@ -147,6 +165,12 @@ for(var i = 0; i < coins_on_target; i += 1;)
 //if we reached the set number of knives we needed to throw are correctly stuck inside the target
 if knives_on_target == total_knives_needed
 {
+		//play the sound
+	var target_destroy_sound = sound_target_break;
+	audio_sound_gain(target_destroy_sound,global.sound_effects_volume, 0);
+	audio_play_sound(target_destroy_sound,10,false);
+	consecutive_hit_amount = 0;
+	
 	//moves to next level in stage(up to boss)
 	global.current_level_in_stage += 1;
 	global.stage_number += 1;
@@ -195,7 +219,7 @@ if knives_on_target == total_knives_needed
 	if global.current_level_in_stage >= 4
 	{
 		//swap our target image
-		global.current_taget_number = irandom_range(TARGET_BOSS_COMMON.DEFAULT,TARGET_BOSS_COMMON.LAST_IN_LIST - 1);
+		global.current_target_number = irandom_range(TARGET_BOSS.DEFAULT,TARGET_BOSS.LAST_IN_LIST - 1);
 		
 		
 		
@@ -214,24 +238,32 @@ if knives_on_target == total_knives_needed
 			//reset the level for stage
 			global.current_level_in_stage = 0;
 			
-			global.current_taget_number = irandom_range(0,TARGET_REGULAR.LAST_IN_LIST - 1);
+			global.current_target_number = irandom_range(0,TARGET_REGULAR.LAST_IN_LIST - 1);
 		}
 		
-	
-		movement_pattern = ds_grid_get(global.target_grid,TARGET.MOVEMENT_PATTERN,global.current_taget_number);
-		target_sprite = ds_grid_get(global.target_grid,TARGET.SPRITE,global.current_taget_number);
+		
+		
+		
+		target_sprite = ds_grid_get(global.target_grid,TARGET.SPRITE,global.current_target_number);
 		//target_sprite = spr_target_common_1;
 		sprite_index = target_sprite;
 	}
 	
 	
 	
-	total_knives_needed = ds_grid_get(global.target_grid,TARGET.AMOUNT_OF_KNIVES_TO_THROW,global.current_taget_number);
+	total_knives_needed = ds_grid_get(global.target_grid,TARGET.AMOUNT_OF_KNIVES_TO_THROW,global.current_target_number);
 	global.starting_knives_amount = total_knives_needed;
 	global.knives_left = total_knives_needed;
 	
 	
-	
+	//if its a boss pattern...set that suckerrr
+	movement_pattern = ds_grid_get(global.target_grid,TARGET.MOVEMENT_PATTERN,global.current_target_number);
+		
+	//choose a random BASIC target movement pattern
+	if global.current_target_number <= (TARGET_REGULAR.LAST_IN_LIST - 1)
+	{
+		movement_pattern = irandom_range(0,1);
+	}
 	
 	
 	//put the coins on the target (as long as this isnt a boss fight)

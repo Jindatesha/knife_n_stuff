@@ -21,7 +21,7 @@ grid_id_in_this_tab_array[2] = global.wall_grid;
 
 
 current_item_number_in_this_tab_array[0] = global.current_knife_number;
-current_item_number_in_this_tab_array[1] = global.current_taget_number;
+current_item_number_in_this_tab_array[1] = global.current_target_number;
 current_item_number_in_this_tab_array[2] = global.current_wall_number;
 
 current_sprite_in_this_tab_array[0] = spr_ui_all_knives;

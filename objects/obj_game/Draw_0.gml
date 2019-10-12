@@ -7,7 +7,16 @@
 //draw the knife
 if draw_knife == true and global.current_run_active == true
 {
-	draw_sprite_ext(global.knife_sprite,0,knife_starting_loc_x,knife_starting_loc_y,1,1,0,c_white,ui_alpha);
+	knife_current_loc_y -= 4;
+	knife_current_loc_y = clamp(knife_current_loc_y,knife_ending_loc_y,knife_starting_loc_y);
+	draw_knife_alpha += 0.14;
+	draw_knife_alpha = clamp(draw_knife_alpha,0,1);
+	if draw_knife_alpha > ui_alpha
+	{
+		draw_knife_alpha = ui_alpha;
+	}
+	
+	draw_sprite_ext(global.knife_sprite,0,knife_starting_loc_x,knife_current_loc_y,1,1,0,c_white,draw_knife_alpha);
 }
 
 
@@ -117,7 +126,7 @@ else
 	{
 	
 		
-		var bosses_name = ds_grid_get(global.target_grid,1,global.current_taget_number);
+		var bosses_name = ds_grid_get(global.target_grid,1,global.current_target_number);
 		draw_text_ext_color(stage_ui_number_starting_x,stage_ui_number_starting_y,"BOSS: " + bosses_name,0,300,my_color,my_color,my_color,my_color,ui_alpha);
 	}
 }

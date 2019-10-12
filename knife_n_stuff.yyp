@@ -87,6 +87,14 @@
             }
         },
         {
+            "Key": "1cc431a7-b987-43f3-988a-7771aa8df432",
+            "Value": {
+                "id": "a6fce204-d341-4445-a8f6-7ef7e1b130a9",
+                "resourcePath": "sprites\\spr_target_boss_pie_bits\\spr_target_boss_pie_bits.yy",
+                "resourceType": "GMSprite"
+            }
+        },
+        {
             "Key": "1d71b0f9-4619-4b07-9dd0-394475492d98",
             "Value": {
                 "id": "53411205-b9c9-44d4-a85b-773de4a7c064",
@@ -211,6 +219,14 @@
             "Value": {
                 "id": "28955166-e4e0-4bb0-8828-f7ada73a6c64",
                 "resourcePath": "sprites\\spr_knife_default\\spr_knife_default.yy",
+                "resourceType": "GMSprite"
+            }
+        },
+        {
+            "Key": "7345cd49-23df-49f1-a3bd-8de564db19b2",
+            "Value": {
+                "id": "0cd0397b-2a28-498f-9e6c-49ef0f9caa14",
+                "resourcePath": "sprites\\spr_target_boss_pie\\spr_target_boss_pie.yy",
                 "resourceType": "GMSprite"
             }
         },
@@ -415,6 +431,14 @@
             }
         },
         {
+            "Key": "ae9f311c-e8db-4dfc-b9db-57500b38ea2b",
+            "Value": {
+                "id": "fe4326e6-e4f5-44dd-b101-d62551b39d63",
+                "resourcePath": "sprites\\spr_knife_dart\\spr_knife_dart.yy",
+                "resourceType": "GMSprite"
+            }
+        },
+        {
             "Key": "aeacd143-81da-4163-8c0d-292a1ab229f3",
             "Value": {
                 "id": "c35423fa-832b-4a83-83c0-5ee446167cc2",
@@ -503,6 +527,14 @@
             }
         },
         {
+            "Key": "c113d4bc-14ea-43d4-a305-e77c5795f4d0",
+            "Value": {
+                "id": "dbbedf65-ce78-4c34-acc9-82ea94c56742",
+                "resourcePath": "sounds\\sound_gain_coin\\sound_gain_coin.yy",
+                "resourceType": "GMSound"
+            }
+        },
+        {
             "Key": "c3adab70-a9bf-4616-8d48-09378b94f0c7",
             "Value": {
                 "id": "e3c75aa7-1641-4c3d-9ff2-23446bcab824",
@@ -548,6 +580,14 @@
                 "id": "ae0167f4-a04f-4e5d-8aa9-072777c6b1a0",
                 "resourcePath": "options\\windows\\options_windows.yy",
                 "resourceType": "GMWindowsOptions"
+            }
+        },
+        {
+            "Key": "cd7a3766-7d9d-4657-8890-6bdd004dbbe6",
+            "Value": {
+                "id": "550fb5bb-7b9c-40b9-9b0e-a2c3b78ff751",
+                "resourcePath": "sounds\\sound_knife_ricochet\\sound_knife_ricochet.yy",
+                "resourceType": "GMSound"
             }
         },
         {
@@ -628,6 +668,14 @@
                 "id": "b552c178-3f0c-45b3-91be-5140dba79156",
                 "resourcePath": "views\\ede0ad8b-2fff-448e-ad51-8cdeb550fe87.yy",
                 "resourceType": "GMFolder"
+            }
+        },
+        {
+            "Key": "eedef1dd-59db-4a89-b0b2-1fcded86a8bd",
+            "Value": {
+                "id": "a3f459b2-6c87-47d3-97df-f7fbddd04552",
+                "resourcePath": "sounds\\sound_target_break\\sound_target_break.yy",
+                "resourceType": "GMSound"
             }
         },
         {

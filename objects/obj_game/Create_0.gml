@@ -29,6 +29,13 @@ draw_set_color(c_ui_yellow);
 draw_set_font(font_monofonto);
 
 
+//sound globals
+global.sound_effects_volume = 1;
+global.music_volume = 1;
+
+
+
+
 //enum of all the targets
 
 //regular target/object  grid
@@ -42,26 +49,14 @@ enum TARGET_REGULAR
 
 
 //boss targets
-enum TARGET_BOSS_COMMON
+enum TARGET_BOSS
 {
 	DEFAULT = TARGET_REGULAR.LAST_IN_LIST,
+	PIE,
 	//DEFAULT_TOO,
 	LAST_IN_LIST
 }
 
-enum TARGET_BOSS_RARE
-{
-	DEFAULT = TARGET_BOSS_COMMON.LAST_IN_LIST,
-	DEFAULT_TOO,
-	LAST_IN_LIST
-}
-
-enum TARGET_BOSS_EPIC
-{
-	DEFAULT = TARGET_BOSS_RARE.LAST_IN_LIST,
-	DEFAULT_TOO,
-	LAST_IN_LIST
-}
 
 
 
@@ -94,8 +89,8 @@ scr_add_target_to_grid(spr_target_common_1,"diff",true,0,false,spr_target_common
 
 //bosses
 //common
-scr_add_target_to_grid(spr_target_boss_common_1,"DONUT",true,0,false,spr_target_boss_common_1,spr_target_boss_common_1_bits,sound_knife_hit_target_common_default,1,5);
-
+scr_add_target_to_grid(spr_target_boss_common_1,"DONUT",true,0,false,spr_target_boss_common_1,spr_target_boss_common_1_bits,sound_knife_hit_target_common_default,2,5);
+scr_add_target_to_grid(spr_target_boss_pie,"PIE",true,0,false,spr_target_boss_pie,spr_target_boss_pie_bits,sound_knife_hit_target_common_default,2,5);
 
 
 
@@ -132,9 +127,9 @@ global.knife_grid = ds_grid_create(5,0);
 //common
 scr_add_knife_to_grid(spr_knife_default,"Basic",true,0,true);
 //rambo
-scr_add_knife_to_grid(spr_knife_rambo,"Ramboh",false,15,false);
-
-
+scr_add_knife_to_grid(spr_knife_rambo,"Ramboh",false,1,false);
+//dart
+scr_add_knife_to_grid(spr_knife_dart,"Dart",false,1,false);
 
 
 
@@ -159,8 +154,10 @@ scr_add_wall_to_grid(spr_background_basic,"Basic",true,0,true);
 global.starting_knives_amount = 10;
 global.knives_left = global.starting_knives_amount;
 knife_starting_loc_x = view_w / 2;
-knife_starting_loc_y = (view_h * 0.8) - sprite_get_height(spr_knife_default) + sprite_get_height(spr_ui_knives_left);
-
+knife_ending_loc_y = (view_h * 0.8) - sprite_get_height(spr_knife_default) + sprite_get_height(spr_ui_knives_left);
+knife_starting_loc_y = knife_ending_loc_y + 35;
+knife_current_loc_y = knife_starting_loc_y;
+draw_knife_alpha = 0;
 
 //knife ui stuff
 knives_left_ui_loc_x =  view_w * 0.06;
@@ -205,8 +202,8 @@ for(var i = 0; i < ds_grid_height(which_grid_id); i += 1;)
 	}
 }
 		
-global.current_taget_number = false_grid_pos;
-global.target_sprite = ds_grid_get(which_grid_id,0,global.current_taget_number);
+global.current_target_number = false_grid_pos;
+global.target_sprite = ds_grid_get(which_grid_id,0,global.current_target_number);
 
 
 

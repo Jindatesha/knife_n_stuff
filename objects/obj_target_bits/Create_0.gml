@@ -11,7 +11,7 @@ part_type_direction(global.target_bits_part_type,240,360,0,0);
 part_type_gravity(global.target_bits_part_type,0.15,270);
 part_type_speed(global.target_bits_part_type,0.3,0.8,0.1,0);
 part_type_orientation(global.target_bits_part_type,0,360,9,10,true);
-what_particle_sprite = ds_grid_get(global.target_grid,6,global.current_taget_number);
+what_particle_sprite = ds_grid_get(global.target_grid,6,global.current_target_number);
 part_type_sprite(global.target_bits_part_type,what_particle_sprite,false,false,true);
 
 var bottom_of_target_x = x;

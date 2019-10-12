@@ -24,6 +24,10 @@ if global.current_run_active == true and ive_collided == false
 		*/
 		
 		//current width = 12
+		
+		var ricochet_sound = sound_knife_ricochet;
+		audio_sound_gain(ricochet_sound,global.sound_effects_volume, 0);
+		audio_play_sound(ricochet_sound,10,false);
 	
 		global.knife_collided = true;
 		global.current_run_active = false;

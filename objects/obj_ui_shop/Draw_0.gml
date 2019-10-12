@@ -249,11 +249,11 @@ draw_sprite(spr_ui_shop_top_line,0,top_line_location_x,bot_line_location_y);
 						global.wall_grid = grid_id_in_this_tab_array[2];
 
 						global.current_knife_number = current_item_number_in_this_tab_array[0];
-						global.current_taget_number = current_item_number_in_this_tab_array[1];
+						global.current_target_number = current_item_number_in_this_tab_array[1];
 						global.current_wall_number = current_item_number_in_this_tab_array[2];
 
 						global.knife_sprite = ds_grid_get(global.knife_grid,0,global.current_knife_number);
-						global.target_sprite = ds_grid_get(global.target_grid,0,global.current_taget_number);
+						global.target_sprite = ds_grid_get(global.target_grid,0,global.current_target_number);
 						global.wall_sprite = ds_grid_get(global.wall_grid,0,global.current_wall_number);
 					#endregion
 				}
