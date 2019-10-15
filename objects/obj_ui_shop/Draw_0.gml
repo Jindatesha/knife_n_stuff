@@ -85,7 +85,7 @@ if device_mouse_check_button_released(0,mb_left) and mouse_in_circle and (exit_s
 	var top_sub_image = 0;
 	var amount_to_middle_tab = tab_height;
 	var my_text_color = c_white;
-	var num_of_tabs = 3;
+	var num_of_tabs = 2;
 	draw_set_valign(fa_middle);
 	draw_set_halign(fa_center);
 	draw_set_font(font_monofonto_small);
@@ -178,12 +178,88 @@ draw_sprite(spr_ui_shop_top_line,0,top_line_location_x,bot_line_location_y);
 	var item_cost_color = c_white;
 	var this_slot_selected = 0;
 	var this_items_cost;
+	var rarity_gap = 170;
+	var knives_rarity_gap = 0;
+	var knives_in_section = 0;
+	
 	
 	for(var i = 0; i < num_of_items_in_this_tab; i += 1;)
 	{
+		
+		//dealing with knives
+		if selected_top_tab == 0
+		{
+			if i >= KNIFE_COMMON.DEFAULT and i < KNIFE_COMMON.LAST_IN_LIST
+			{
+				knives_rarity_gap = rarity_gap * 0;
+				knives_in_section = 0;
+			}
+			else
+			{
+				if i >= KNIFE_EPIC.DEFAULT and i < KNIFE_EPIC.LAST_IN_LIST
+				{
+					knives_rarity_gap = rarity_gap * 1;
+					knives_in_section = KNIFE_COMMON.LAST_IN_LIST;
+				}
+				else
+				{
+					knives_rarity_gap = rarity_gap * 2;
+					knives_in_section = KNIFE_EPIC.LAST_IN_LIST;
+				}
+			
+			}
+		}
+		
+		
+		
+		
 		//backing
-		this_item_slot_x = (item_slot_width /2) + ((item_slot_width + item_slot_spacer_w) * (i mod slots_per_row));
-		this_item_slot_y = ((item_slot_height/2) + item_slot_spacer_h) + ((item_slot_height + item_slot_spacer_h) * (i div slots_per_row)) + item_slot_scrolled_amount;
+		this_item_slot_x = (item_slot_width /2) + ((item_slot_width + item_slot_spacer_w) * ((i - knives_in_section) mod slots_per_row));
+		this_item_slot_y = ((item_slot_height/2) + item_slot_spacer_h) + ((item_slot_height + item_slot_spacer_h) * ((i - knives_in_section) div slots_per_row)) + item_slot_scrolled_amount + knives_rarity_gap;
+
+
+		var knife_separator_gap = 5;
+		var knife_separator_text = "";
+		var surface_width = surface_get_width(shop_surface);
+		var knife_sep_loc_y = this_item_slot_y - (rarity_gap/2);
+		
+		if (selected_top_tab == 0)
+		{		
+			if i == KNIFE_EPIC.DEFAULT or i == KNIFE_CHAMPION.DEFAULT
+			{
+				if i == KNIFE_EPIC.DEFAULT
+				{
+					knife_separator_text = "EPIC";
+				}
+				else
+				{
+					knife_separator_text = "CHAMPION";
+				}
+				var width_of_knife_separator_text = string_width(knife_separator_text);
+				var difference_from_total_width = surface_width - width_of_knife_separator_text;
+				var line_ui_slice_width = ((difference_from_total_width)/2) - knife_separator_gap;
+				
+				
+				//left line
+				scr_draw_3_slice_stretched(spr_ui_shop_bar_3_slice,line_ui_slice_width,0,knife_sep_loc_y);
+			
+			
+				//knife separator text
+				draw_set_halign(fa_center);
+				draw_set_valign(fa_middle);
+				draw_text(line_ui_slice_width + (width_of_knife_separator_text/2) + knife_separator_gap,knife_sep_loc_y,string(knife_separator_text));
+			
+			
+				//right line
+				scr_draw_3_slice_stretched(spr_ui_shop_bar_3_slice,line_ui_slice_width,line_ui_slice_width + (width_of_knife_separator_text) + (knife_separator_gap * 2),knife_sep_loc_y);
+
+			}
+		}
+		
+		
+		
+
+		
 		unlocked = ds_grid_get(item_grid_id,2,i);
 		this_items_cost = ds_grid_get(item_grid_id,3,i);
 		
@@ -245,15 +321,12 @@ draw_sprite(spr_ui_shop_top_line,0,top_line_location_x,bot_line_location_y);
 			
 					#region because we have just made a change in one of the global holders...change our globals to match
 						global.knife_grid = grid_id_in_this_tab_array[0];
-						global.target_grid = grid_id_in_this_tab_array[1];
-						global.wall_grid = grid_id_in_this_tab_array[2];
+						global.wall_grid = grid_id_in_this_tab_array[1];
 
 						global.current_knife_number = current_item_number_in_this_tab_array[0];
-						global.current_target_number = current_item_number_in_this_tab_array[1];
-						global.current_wall_number = current_item_number_in_this_tab_array[2];
+						global.current_wall_number = current_item_number_in_this_tab_array[1];
 
 						global.knife_sprite = ds_grid_get(global.knife_grid,0,global.current_knife_number);
-						global.target_sprite = ds_grid_get(global.target_grid,0,global.current_target_number);
 						global.wall_sprite = ds_grid_get(global.wall_grid,0,global.current_wall_number);
 					#endregion
 				}
@@ -313,7 +386,7 @@ draw_sprite(spr_ui_shop_top_line,0,top_line_location_x,bot_line_location_y);
 		item_slot_scrolled_amount -= (old_mouse_y - my_mouse_y);
 	}
 	
-	item_slot_scrolled_amount = clamp(item_slot_scrolled_amount,-(((((item_slot_height/1.5) + item_slot_spacer_h) * 2) + ((item_slot_height/2) + item_slot_spacer_h) + (item_slot_height + item_slot_spacer_h) * (num_of_items_in_this_tab div slots_per_row))) + (surface_get_height(shop_surface)),(item_slot_height/1.5) + item_slot_spacer_h);
+	item_slot_scrolled_amount = clamp(item_slot_scrolled_amount,-(((((item_slot_height/1.5) + item_slot_spacer_h) * 2) + ((item_slot_height/2) + item_slot_spacer_h) + (item_slot_height + item_slot_spacer_h) * (num_of_items_in_this_tab div slots_per_row))) + (surface_get_height(shop_surface)) - ((rarity_gap * 1.4)),(item_slot_height/1.5) + item_slot_spacer_h);
 	
 	
 	old_mouse_y = my_mouse_y;

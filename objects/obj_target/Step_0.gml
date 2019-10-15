@@ -161,146 +161,63 @@ for(var i = 0; i < coins_on_target; i += 1;)
 }
 
 
-
 //if we reached the set number of knives we needed to throw are correctly stuck inside the target
-if knives_on_target == total_knives_needed
+if knives_on_target == total_knives_needed and has_created_obj_destroyed_target == false
 {
-		//play the sound
+	has_created_obj_destroyed_target = true; 
+	
+	for(var i = 0; i < sprite_get_number(spr_texture_break_target); i += 1;)
+	{
+		with(instance_create_depth(x,y,depth - 2,obj_destroyed_target))
+		{
+			my_sub_image = i;
+			initial_targets_image = other.sprite_index;
+			time_for_target_split = other.time_for_target_split;
+			#region set direction
+	switch(my_sub_image)
+	{
+		case 0:
+		{
+			direction = irandom_range(320,360);
+		}
+		break;
+	
+		case 1:
+		{
+			direction = irandom_range(140,170);
+		}
+		break;
+	
+		case 2:
+		{
+			direction = irandom_range(60,110);
+		}
+		break;
+	
+		case 3:
+		{
+			direction = irandom_range(220,260);
+		}
+		break;
+	
+		case 4:
+		{
+			direction = irandom_range(270,300);
+		}
+		break;
+	}
+#endregion
+
+		}
+	}
+	
+	//play the sound
 	var target_destroy_sound = sound_target_break;
 	audio_sound_gain(target_destroy_sound,global.sound_effects_volume, 0);
 	audio_play_sound(target_destroy_sound,10,false);
-	consecutive_hit_amount = 0;
-	
-	//moves to next level in stage(up to boss)
-	global.current_level_in_stage += 1;
-	global.stage_number += 1;
-	hit_counter = 0;
-	
-	with(obj_coin)
-	{
-		instance_destroy();
-	}
-	
-	//destroy the knives in our target/object
-	with(obj_dummy_knife)
-	{
-		instance_destroy();
-	}
-	
-	//does this new target im about to make...have coin(s) on it?
-	var random_number = irandom_range(1,100);
-	var how_many_coins = 0;
-	
-	if random_number >= 50
-	{
-		random_number = irandom_range(1,100);
-		
-		if random_number <= 10
-		{
-			how_many_coins = 3;
-		}
-		else
-		{
-			if random_number <= 30
-			{
-				how_many_coins = 2;
-			}
-			else
-			{
-				how_many_coins = 1;
-			}
-		}
-	}
 	
 	
-	
-	
-	//was this the boss fight?
-	if global.current_level_in_stage >= 4
-	{
-		//swap our target image
-		global.current_target_number = irandom_range(TARGET_BOSS.DEFAULT,TARGET_BOSS.LAST_IN_LIST - 1);
-		
-		
-		
-		//only do this if its a boss battle specifically
-		if global.current_level_in_stage == 4
-		{
-			global.is_doing_boss_intro = true;
-			target_scale = 0.1;
-		}
-		
-		
-		
-		//this is resetting from boss battle back to regular targets
-		if global.current_level_in_stage > 4
-		{
-			//reset the level for stage
-			global.current_level_in_stage = 0;
-			
-			global.current_target_number = irandom_range(0,TARGET_REGULAR.LAST_IN_LIST - 1);
-		}
-		
-		
-		
-		
-		target_sprite = ds_grid_get(global.target_grid,TARGET.SPRITE,global.current_target_number);
-		//target_sprite = spr_target_common_1;
-		sprite_index = target_sprite;
-	}
-	
-	
-	
-	total_knives_needed = ds_grid_get(global.target_grid,TARGET.AMOUNT_OF_KNIVES_TO_THROW,global.current_target_number);
-	global.starting_knives_amount = total_knives_needed;
-	global.knives_left = total_knives_needed;
-	
-	
-	//if its a boss pattern...set that suckerrr
-	movement_pattern = ds_grid_get(global.target_grid,TARGET.MOVEMENT_PATTERN,global.current_target_number);
-		
-	//choose a random BASIC target movement pattern
-	if global.current_target_number <= (TARGET_REGULAR.LAST_IN_LIST - 1)
-	{
-		movement_pattern = irandom_range(0,1);
-	}
-	
-	
-	//put the coins on the target (as long as this isnt a boss fight)
-	if how_many_coins > 0 and global.current_level_in_stage < 4 
-	{
-		var this_coins_direction = irandom_range(0,360);
-		var this_coins_length = 0;
-			
-		for(var i = 0; i < how_many_coins; i += 1;)
-		{	
-			coins_on_target = instance_number(obj_coin);
-			this_coins_direction = irandom_range(0,360);
-			this_coins_length = 0;
-			//set this knife's length and direction location so it may rotate with the target	
-			do
-			{
-				this_coins_length += 1;
-			}
-			until ( position_empty(x + lengthdir_x(this_coins_length,this_coins_direction),y + lengthdir_y(this_coins_length,this_coins_direction)))
-			
-			this_coins_length += sprite_get_width(spr_ui_currency_object)/2;
-			
-			ds_grid_set(location_of_coins_grid,0,i,this_coins_length);
-			ds_grid_set(location_of_coins_grid,1,i,this_coins_direction);
-	
-			with(instance_create_depth(x + lengthdir_x(this_coins_length,this_coins_direction),y + lengthdir_y(this_coins_length,this_coins_direction),depth + 1,obj_coin))
-			{
-				mask_index = spr_ui_currency_collision;
-			}
-		}
-	}
-	
-	
-	
-	
-	//we no longer have knives in us
-	knives_on_target = 0;
+	alarm[1] = time_for_target_split;
 	
 }
 

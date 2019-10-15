@@ -36,7 +36,7 @@ consecutive_hit_timer = 0;
 consecutive_hit_amount = 0;
 
 
-
-
+has_created_obj_destroyed_target = false;
+time_for_target_split = room_speed * 1;
 
 

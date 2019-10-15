@@ -100,19 +100,17 @@ scr_add_target_to_grid(spr_target_boss_pie,"PIE",true,0,false,spr_target_boss_pi
 //boss targets
 enum KNIFE_COMMON
 {
-	DEFAULT,
-	//DEFAULT_TOO,
+	DEFAULT = 0,
 	LAST_IN_LIST
 }
 
 enum KNIFE_EPIC // epic
 {
 	DEFAULT = KNIFE_COMMON.LAST_IN_LIST,
-	DEFAULT_TOO,
 	LAST_IN_LIST
 }
 
-enum KNIFE_RARE_CHAMPION //champion
+enum KNIFE_CHAMPION //champion
 {
 	DEFAULT = KNIFE_EPIC.LAST_IN_LIST,
 	DEFAULT_TOO,
