@@ -26,7 +26,7 @@ current_sprite_in_this_tab_array[1] = spr_ui_all_walls;
 
 //for scrolling in item slot
 item_slot_scrolled_amount = 0;
-old_mouse_y = 0;
+old_mouse_y = device_mouse_y(0);
 
 
 
@@ -40,8 +40,8 @@ item_slot_array[0] = false;
 //tab array to determine if we properly clicked these or not
 tab_hovered_array[0] = false;
 
-
-
+//to not have snapping to locations
+finger_held_down_time = 0;
 
 
 

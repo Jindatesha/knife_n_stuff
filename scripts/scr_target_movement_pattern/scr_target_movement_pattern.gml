@@ -7,7 +7,7 @@ switch(what_movement_pattern)
 	default:
 	case 0:
 		//default/regular/basic
-		rotation_speed = default_rotation_speed * 1.4;		
+		rotation_speed = default_rotation_speed * 1.6;		
 	break;
 	
 	

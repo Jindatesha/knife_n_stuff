@@ -26,6 +26,10 @@ if my_mouse_x >= x - (button_width/2) and my_mouse_x <= x + (button_width/2) and
 		instance_destroy();
 	}
 	
+	with(obj_main_menu)
+	{
+		instance_destroy();
+	}
 	
 	
 	//create the ui object for the shop

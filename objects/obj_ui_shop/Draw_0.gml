@@ -47,34 +47,6 @@ draw_sprite(spr_ui_shop_top_ribbon,0,ribbon_starting_x,0);
 #endregion
 
 
-//exit shop button
-var exit_shop_button_width = sprite_get_width(spr_ui_shop_exit_button);
-var exit_shop_button_starting_x = view_w - (ribbon_starting_x + side_padding_from_initial_ribbon + (exit_shop_button_width/2) + 7);
-var exit_shop_button_starting_y = currency_add_button_starting_y;
-draw_sprite(spr_ui_shop_exit_button,0,exit_shop_button_starting_x,exit_shop_button_starting_y);
-
-//if i click it...leave this menu
-var mouse_in_circle = point_in_circle(my_mouse_x,my_mouse_y,exit_shop_button_starting_x,exit_shop_button_starting_y,exit_shop_button_width);
-if mouse_in_circle != true
-{
-	exit_shop_button_clicked = false;
-}
-
-
-if device_mouse_check_button_pressed(0,mb_left) and mouse_in_circle
-{
-	exit_shop_button_clicked = true;
-}
-
-
-
-if device_mouse_check_button_released(0,mb_left) and mouse_in_circle and (exit_shop_button_clicked == true)
-{
-	//exit the menu
-	restart_to_new_session();
-}
-
-
 #region tabs
 	
 	var tab_starting_location_x = currency_coin_starting_x + (coin_width/2);
@@ -117,7 +89,7 @@ if device_mouse_check_button_released(0,mb_left) and mouse_in_circle and (exit_s
 
 		if device_mouse_check_button_pressed(0,mb_left) and mouse_in_tab
 		{
-			tab_hovered_array[i] = true;
+			tab_hovered_array[i] = true;		
 		}
 
 
@@ -125,6 +97,7 @@ if device_mouse_check_button_released(0,mb_left) and mouse_in_circle and (exit_s
 		if device_mouse_check_button_released(0,mb_left) and mouse_in_tab and (tab_hovered_array[i] == true)
 		{
 			selected_top_tab = i;
+			item_slot_scrolled_amount = 0;
 		}
 		
 		
@@ -153,7 +126,8 @@ draw_sprite(spr_ui_shop_top_line,0,top_line_location_x,bot_line_location_y);
 
 
 
-
+if selected_top_tab == 0
+{
 #region surface (all the items in our shop)
 
 	surface_set_target(shop_surface);
@@ -275,6 +249,7 @@ draw_sprite(spr_ui_shop_top_line,0,top_line_location_x,bot_line_location_y);
 			if device_mouse_check_button_pressed(0,mb_left) and mouse_in_rectangle
 			{
 				item_slot_array[i] = true;
+				old_mouse_y = my_mouse_y;
 			}
 
 
@@ -383,18 +358,75 @@ draw_sprite(spr_ui_shop_top_line,0,top_line_location_x,bot_line_location_y);
 	
 	if device_mouse_check_button(0,mb_left)
 	{
-		item_slot_scrolled_amount -= (old_mouse_y - my_mouse_y);
+		finger_held_down_time += 1;
+		
+		//if we had our finger down for at least a frame or two...then start being able to register the sliding and what not
+		if finger_held_down_time > 2
+		{
+			item_slot_scrolled_amount -= (old_mouse_y - my_mouse_y);
+		}
+	}
+	else
+	{
+		finger_held_down_time = 0;
 	}
 	
-	item_slot_scrolled_amount = clamp(item_slot_scrolled_amount,-(((((item_slot_height/1.5) + item_slot_spacer_h) * 2) + ((item_slot_height/2) + item_slot_spacer_h) + (item_slot_height + item_slot_spacer_h) * (num_of_items_in_this_tab div slots_per_row))) + (surface_get_height(shop_surface)) - ((rarity_gap * 1.4)),(item_slot_height/1.5) + item_slot_spacer_h);
-	
+	if (selected_top_tab == 0)
+	{
+		item_slot_scrolled_amount = clamp(item_slot_scrolled_amount,-(((((item_slot_height/1.5) + item_slot_spacer_h) * 2) + ((item_slot_height/2) + item_slot_spacer_h) + (item_slot_height + item_slot_spacer_h) * (num_of_items_in_this_tab div slots_per_row))) + (surface_get_height(shop_surface)) - ((rarity_gap * 1.4)),(item_slot_height/1.5) + item_slot_spacer_h);
+	}
+	else
+	{
+		item_slot_scrolled_amount = clamp(item_slot_scrolled_amount,-(((((item_slot_height/1.5) + item_slot_spacer_h) * 2) + ((item_slot_height/2) + item_slot_spacer_h) + (item_slot_height + item_slot_spacer_h) * (num_of_items_in_this_tab div slots_per_row))) + (surface_get_height(shop_surface)),(item_slot_height/1.5) + item_slot_spacer_h);
+	}
 	
 	old_mouse_y = my_mouse_y;
 
 	draw_surface(shop_surface,item_slot_starting_loc_x,item_slot_starting_loc_y);
 	
 #endregion
+
 var item_number = current_item_number_in_this_tab_array[selected_top_tab];
 //draw_set_font(font_monofonto);
 draw_text(top_line_location_x + (sprite_get_width(spr_ui_shop_top_line)/2),bot_line_location_y + ui_line_height + 16,ds_grid_get(item_grid_id,1,current_item_number_in_this_tab_array[selected_top_tab]));
+}
+
+
+
+
+
+
+
+
+#region exit shop button
+	var exit_shop_button_width = sprite_get_width(spr_ui_shop_exit_button);
+	var exit_shop_button_starting_x = view_w - (ribbon_starting_x + side_padding_from_initial_ribbon + (exit_shop_button_width/2) + 7);
+	var exit_shop_button_starting_y = currency_add_button_starting_y;
+	draw_sprite(spr_ui_shop_exit_button,0,exit_shop_button_starting_x,exit_shop_button_starting_y);
+
+	//if i click it...leave this menu
+	var mouse_in_circle = point_in_circle(my_mouse_x,my_mouse_y,exit_shop_button_starting_x,exit_shop_button_starting_y,exit_shop_button_width);
+	if mouse_in_circle != true
+	{
+		exit_shop_button_clicked = false;
+	}
+
+
+	if device_mouse_check_button_pressed(0,mb_left) and mouse_in_circle
+	{
+		exit_shop_button_clicked = true;
+	}
+
+
+
+	if device_mouse_check_button_released(0,mb_left) and mouse_in_circle and (exit_shop_button_clicked == true)
+	{
+		//exit the menu
+		restart_to_new_session();
+
+	}
+#endregion
+
+
+
 

@@ -29,10 +29,19 @@
 		instance_destroy();
 	}
 	
+	with(obj_main_menu)
+	{
+		instance_destroy();
+	}
+	
 	
 	with(obj_end_run_menu)
 	{
 		instance_destroy();
 	}
 	
+
+	surface_free(shop_surface);
 	instance_destroy();
+	
+	

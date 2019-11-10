@@ -4,7 +4,9 @@
 //game run speed
 game_set_speed(60, gamespeed_fps);
 
-
+updated_fps = 0;
+time_to_update_fps = 0;
+average_fps_list = ds_list_create();
 
 //macros
 #macro view view_camera[0]
@@ -20,7 +22,7 @@ camera_set_view_size(view,ideal_width,ideal_height);
 
 //colors
 #macro c_ui_yellow make_color_rgb(228,178,42)
-
+#macro c_ui_blue make_color_rgb(174,234,162)
 
 
 
@@ -101,12 +103,15 @@ scr_add_target_to_grid(spr_target_boss_pie,"PIE",true,0,false,spr_target_boss_pi
 enum KNIFE_COMMON
 {
 	DEFAULT = 0,
+	SCISSOR,
+	BUTTERKNIFE,
 	LAST_IN_LIST
 }
 
 enum KNIFE_EPIC // epic
 {
 	DEFAULT = KNIFE_COMMON.LAST_IN_LIST,
+	STINGRAY,
 	LAST_IN_LIST
 }
 
@@ -122,13 +127,28 @@ global.knife_grid = ds_grid_create(5,0);
 
 
 //add all the knives to the grid
-//common
+#region common knives
+
+//default
 scr_add_knife_to_grid(spr_knife_default,"Basic",true,0,true);
-//rambo
+scr_add_knife_to_grid(spr_knife_scissor,"Scissor",false,1,false);
+scr_add_knife_to_grid(spr_knife_butterknife,"Butterknife",false,1,false);
+#endregion
+
+
+#region Epic knives
+
 scr_add_knife_to_grid(spr_knife_rambo,"Ramboh",false,1,false);
-//dart
+scr_add_knife_to_grid(spr_knife_stingray,"Stingray",false,1,false);
+
+#endregion
+
+
+#region Champion
+
 scr_add_knife_to_grid(spr_knife_dart,"Dart",false,1,false);
 
+#endregion
 
 
 
@@ -246,10 +266,7 @@ global.wall_sprite = ds_grid_get(which_grid_id,0,global.current_wall_number);
 
 
 
-//create the target/object
-instance_create_depth(view_w /2,view_h * 0.35,depth + 1,obj_target);
 
-instance_create_depth(view_w /2,view_h * 0.35,depth + 2,obj_target_bits);
 
 //so we can draw it
 draw_knife = true;
@@ -280,6 +297,16 @@ started_timer_to_boss_battle = false;
 initial_time_till_boss_starts = room_speed * 1;
 ui_warning_alpha_angle = 0;
 ui_warning_alpha = 1;
+
+
+
+//create the target/object
+//instance_create_depth(view_w /2,view_h * 0.35,depth + 1,obj_target);
+
+instance_create_depth(view_w /2,view_h * 0.35,depth + 2,obj_target_bits);
+
+//
+instance_create_depth(x,y,depth,obj_main_menu);
 
 
 

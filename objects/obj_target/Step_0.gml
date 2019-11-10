@@ -42,25 +42,8 @@ if collided_knife != noone and global.current_run_active == true
 		instance_destroy();
 	}
 	
-	//set this knife's length and direction location so it may rotate with the target	
-	do
-	{
-		this_knifes_actual_length += 1;
-	}
-	until ( position_empty(x + lengthdir_x(this_knifes_actual_length,this_knifes_direction),y + lengthdir_y(this_knifes_actual_length,this_knifes_direction)))
 	
-	var this_knifes_fake_length = this_knifes_actual_length - 30 - (sprite_get_height(global.knife_sprite) - sprite_get_height(spr_knife_default));
-	
-	ds_grid_set(location_of_knives_grid,0,knives_on_target,this_knifes_fake_length);
-	ds_grid_set(location_of_knives_grid,1,knives_on_target,this_knifes_actual_length);
-	ds_grid_set(location_of_knives_grid,2,knives_on_target,this_knifes_direction);
-	
-	with(instance_create_depth(x + lengthdir_x(this_knifes_actual_length,this_knifes_direction),y + lengthdir_y(this_knifes_actual_length,this_knifes_direction),depth + 1,obj_dummy_knife))
-	{
-		sprite_index = global.knife_sprite;
-		fake_x = x - lengthdir_x(this_knifes_actual_length - this_knifes_fake_length,this_knifes_direction);
-		fake_y = y - lengthdir_y(this_knifes_actual_length - this_knifes_fake_length,this_knifes_direction);
-	}
+	scr_place_dummy_knife(this_knifes_actual_length,this_knifes_direction,false);
 	
 	
 	
@@ -120,25 +103,57 @@ if global.current_run_active == false
 
 
 //update rotation and position of all my knives 
-for(var i = 0; i < knives_on_target; i += 1;)
+for(var i = 0; i < knives_on_target + knives_pre_set_on_target; i += 1;) 
 {
 	var this_knifes_fake_length = ds_grid_get(location_of_knives_grid,0,i);
 	var this_knifes_actual_length = ds_grid_get(location_of_knives_grid,1,i);
 	var this_knifes_direction = ds_grid_get(location_of_knives_grid,2,i);
 	
-	//add to its rotation
-	ds_grid_set(location_of_knives_grid,2,i,this_knifes_direction + rotation_speed);
 	
-	with(instance_find(obj_dummy_knife,i))
+		
+	//add to its rotation
+	
+	if knives_on_target != total_knives_needed
 	{
+		ds_grid_set(location_of_knives_grid,2,i,this_knifes_direction + rotation_speed);
+			
+		this_knifes_direction = ds_grid_get(location_of_knives_grid,2,i);
+	}
+	else
+	{
+		var this_knifes_split_speed = ds_grid_get(location_of_knives_grid,3,i);
+		this_knifes_fake_length += this_knifes_split_speed;
+		ds_grid_set(location_of_knives_grid,0,i,this_knifes_fake_length);
+		
+	}
+			
+			
+	with(instance_find(obj_dummy_knife,i))
+	{		
 		fake_x = other.x + lengthdir_x(this_knifes_fake_length,this_knifes_direction);	
 		fake_y = other.y + lengthdir_y(this_knifes_fake_length,this_knifes_direction);
 		
 		x = other.x + lengthdir_x(this_knifes_actual_length,this_knifes_direction);	
 		y = other.y + lengthdir_y(this_knifes_actual_length,this_knifes_direction);
-		image_angle = this_knifes_direction + 90;
-	}	
+					
+		if other.knives_on_target != other.total_knives_needed
+		{
+			image_angle = this_knifes_direction + 90;
+		}
+		else
+		{			
+			
+			my_alpha -= 0.02;
+			x = fake_x;
+			y = fake_y;
+			var this_knifes_split_angle_speed = ds_grid_get(other.location_of_knives_grid,4,i);
+			image_angle += this_knifes_split_angle_speed;
+		}			
+	}
+	
 }
+
+
 
 
 //update rotation/location for coins
@@ -165,6 +180,19 @@ for(var i = 0; i < coins_on_target; i += 1;)
 if knives_on_target == total_knives_needed and has_created_obj_destroyed_target == false
 {
 	has_created_obj_destroyed_target = true; 
+	
+	//destroy coin so it doesnt rotate with target when its splitting/being destroyed
+	with(obj_coin)
+	{
+		instance_destroy();
+	}
+	
+	var dummy_knife_sprite = obj_dummy_knife.sprite_index;
+	initial_dummy_knife_x_offset = sprite_get_xoffset(dummy_knife_sprite);
+	initial_dummy_knife_y_offset = sprite_get_yoffset(dummy_knife_sprite);
+
+	sprite_set_offset(dummy_knife_sprite, sprite_get_width(dummy_knife_sprite)/2,sprite_get_height(dummy_knife_sprite)/2);		
+
 	
 	for(var i = 0; i < sprite_get_number(spr_texture_break_target); i += 1;)
 	{
@@ -207,9 +235,9 @@ if knives_on_target == total_knives_needed and has_created_obj_destroyed_target 
 		break;
 	}
 #endregion
-
 		}
 	}
+	
 	
 	//play the sound
 	var target_destroy_sound = sound_target_break;

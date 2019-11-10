@@ -1,7 +1,34 @@
 /// @description Insert description here
 // You can write your code in this editor
 
+//draw framerate
+draw_set_halign(fa_left);
+time_to_update_fps -= 1
 
+if time_to_update_fps <= 0
+{
+	
+	ds_list_add(average_fps_list,round(fps_real));
+	var total_qeuery_size = 20;
+	
+	if ds_list_size(average_fps_list) >= total_qeuery_size
+	{
+		time_to_update_fps = room_speed * 0.7;
+		
+		var total_fps = 0;
+		
+		
+		for(var i = 0; i < total_qeuery_size; i += 1;)
+		{
+			total_fps += ds_list_find_value(average_fps_list,i)
+		}
+		
+		updated_fps = round(total_fps/total_qeuery_size);
+		ds_list_clear(average_fps_list);
+	}
+}
+
+draw_text(40,view_h - 40,string(updated_fps));
 
 
 //draw the knife

@@ -1,11 +1,23 @@
-/// @description Insert description here
-// You can write your code in this editor
+/// @description create new target
+
+
+	var dummy_knife_sprite = obj_dummy_knife.sprite_index;
+	sprite_set_offset(dummy_knife_sprite, initial_dummy_knife_x_offset,initial_dummy_knife_y_offset);		
+
+
+	//we no longer have knives in us
+	knives_on_target = 0;
+	knives_pre_set_on_target = 0;
+
+	ds_grid_clear(location_of_knives_grid,-1);
+
 
 	has_created_obj_destroyed_target = false;
 
 	consecutive_hit_amount = 0;
-	is_swapping_move_pattern = false;
 	rotation_speed = default_rotation_speed;
+	my_move_pattern_dir = 1;
+	is_swapping_move_pattern = false;
 	
 	//moves to next level in stage(up to boss)
 	global.current_level_in_stage += 1;
@@ -88,8 +100,7 @@
 	
 	
 	total_knives_needed = ds_grid_get(global.target_grid,TARGET.AMOUNT_OF_KNIVES_TO_THROW,global.current_target_number);
-	global.starting_knives_amount = total_knives_needed;
-	global.knives_left = total_knives_needed;
+	
 	
 	
 	//if its a boss pattern...set that suckerrr
@@ -98,8 +109,24 @@
 	//choose a random BASIC target movement pattern
 	if global.current_target_number <= (TARGET_REGULAR.LAST_IN_LIST - 1)
 	{
-		movement_pattern = irandom_range(0,1);
+		
+		movement_pattern = irandom_range(0,1);//max number here...gradually more difficult	
+			
+		var random_pre_set_knives_in_target = irandom_range(0,4);
+		
+		repeat(random_pre_set_knives_in_target)
+		{
+			scr_place_dummy_knife(20,irandom_range(0,360),true);
+			knives_pre_set_on_target += 1;
+		}
+		
+		total_knives_needed -= random_pre_set_knives_in_target + movement_pattern;		
 	}
+	
+	
+	global.starting_knives_amount = total_knives_needed;
+	global.knives_left = total_knives_needed;
+	
 	
 	
 	//put the coins on the target (as long as this isnt a boss fight)
@@ -117,6 +144,12 @@
 			do
 			{
 				this_coins_length += 1;
+				
+				if collision_circle(x + lengthdir_x(this_coins_length,this_coins_direction),y + lengthdir_y(this_coins_length,this_coins_direction),sprite_get_width(spr_knife_collision_mask),obj_dummy_knife,false,true)
+				{
+					this_coins_length = 0;
+					this_coins_direction = irandom_range(0,360);
+				}
 			}
 			until ( position_empty(x + lengthdir_x(this_coins_length,this_coins_direction),y + lengthdir_y(this_coins_length,this_coins_direction)))
 			
@@ -135,5 +168,9 @@
 	
 	
 	
-	//we no longer have knives in us
-	knives_on_target = 0;
+
+	
+	started_split_animation_for_knives = false;
+	
+	
+	

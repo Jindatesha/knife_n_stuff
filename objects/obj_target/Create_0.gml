@@ -6,11 +6,12 @@ knockback_amount = 0;
 min_y = y - (max_knockback_amount * 1.1);
 max_y = y;
 come_back_speed = 0;
-location_of_knives_grid = ds_grid_create(3,10);
+location_of_knives_grid = ds_grid_create(5,10);
 location_of_coins_grid = ds_grid_create(2,3);
 default_rotation_speed = 1.65;
 rotation_speed = default_rotation_speed;
 
+knives_pre_set_on_target = 0;
 knives_on_target = 0;
 total_knives_needed = 10;
 
@@ -38,5 +39,7 @@ consecutive_hit_amount = 0;
 
 has_created_obj_destroyed_target = false;
 time_for_target_split = room_speed * 1;
-
+started_split_animation_for_knives = false;
+initial_dummy_knife_x_offset = 0;
+initial_dummy_knife_y_offset = 0;
 
